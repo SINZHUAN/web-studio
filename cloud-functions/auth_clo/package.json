@@ -1,0 +1,15 @@
+{
+  "name": "auth_clo",
+  "version": "1.0.0",
+  "description": "认证与账号管理云函数",
+  "main": "index.js",
+  "cloudfunction-config": {
+    "memory": 256,
+    "timeout": 30
+  },
+  "dependencies": {
+    "wx-server-sdk": "latest",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3"
+  }
+}

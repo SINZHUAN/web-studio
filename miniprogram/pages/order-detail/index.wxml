@@ -1,0 +1,350 @@
+<view class="page">
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-ring" />
+    <text>加载中…</text>
+  </view>
+
+  <!-- 订单详情 -->
+  <block wx:elif="{{order}}">
+
+    <!-- 状态卡片 -->
+    <view class="status-card">
+      <view class="status-card__no">{{order.orderId}}</view>
+      <view class="tag tag--{{order.status}} status-card__tag">{{order.statusLabel}}</view>
+    </view>
+
+    <!-- 基本信息（折叠展开） -->
+    <view class="collapse-card">
+      <view class="collapse-card__header" bindtap="toggleInfo">
+        <text class="collapse-card__title">基本信息</text>
+        <text class="collapse-card__arrow {{infoExpanded ? 'collapse-card__arrow--open' : ''}}">›</text>
+      </view>
+      <view class="collapse-card__body" wx:if="{{infoExpanded}}">
+        <view class="info-row">
+          <text class="info-key">收件邮箱</text>
+          <text class="info-val">{{order.email}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-key">服务类型</text>
+          <text class="info-val">简历优化</text>
+        </view>
+        <view class="info-row">
+          <text class="info-key">润色模式</text>
+          <text class="info-val">{{order.modeLabel}}</text>
+        </view>
+        <view class="info-row" wx:if="{{order.targetPosition}}">
+          <text class="info-key">目标岗位</text>
+          <text class="info-val">{{order.targetPosition}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-key">润色强度</text>
+          <text class="info-val">{{order.intensityLabel}}</text>
+        </view>
+        <view class="info-row">
+          <text class="info-key">提交时间</text>
+          <text class="info-val">{{order.createdAtFmt}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 制作进度（垂直流程图，可折叠） -->
+    <view class="collapse-card">
+      <view class="collapse-card__header" bindtap="toggleProgress">
+        <view class="collapse-card__title-wrap">
+          <text class="collapse-card__title">制作进度</text>
+          <text wx:if="{{!progressExpanded && steps.length && steps[steps.length-1].done}}" class="progress-done-badge">已完成</text>
+        </view>
+        <text class="collapse-card__arrow {{progressExpanded ? 'collapse-card__arrow--open' : ''}}">›</text>
+      </view>
+      <view class="collapse-card__body" wx:if="{{progressExpanded}}">
+        <view class="flow-card flow-card--inner">
+          <view
+            wx:for="{{steps}}"
+            wx:key="seq"
+            class="flow-step"
+          >
+            <!-- 左：序号圆圈 + 连接线 -->
+            <view class="flow-step__left">
+              <view class="flow-step__circle {{item.done ? 'flow-step__circle--done' : ''}}">
+                <text class="flow-step__seq">{{item.seq}}</text>
+              </view>
+              <view wx:if="{{!item.isLast}}" class="flow-step__line {{item.done ? 'flow-step__line--done' : ''}}"></view>
+            </view>
+
+            <!-- 右：内容区 -->
+            <view class="flow-step__right">
+              <!-- 带操作按钮的步骤 -->
+              <block wx:if="{{item.showAnalysisBtn}}">
+                <view class="flow-step__row">
+                  <view class="flow-step__info">
+                    <text class="flow-step__title {{item.done ? 'flow-step__title--done' : ''}}">{{item.title}}</text>
+                    <text wx:if="{{item.timeFmt}}" class="flow-step__time">{{item.timeFmt}}</text>
+                  </view>
+                  <view class="flow-action-btn flow-action-btn--analysis" bindtap="openAnalysisModal">查看报告</view>
+                </view>
+              </block>
+
+              <block wx:elif="{{item.showPreviewBtn}}">
+                <view class="flow-step__row">
+                  <view class="flow-step__info">
+                    <text class="flow-step__title {{item.done ? 'flow-step__title--done' : ''}}">{{item.title}}</text>
+                    <text wx:if="{{item.timeFmt}}" class="flow-step__time">{{item.timeFmt}}</text>
+                  </view>
+                  <view class="flow-action-btn flow-action-btn--preview" bindtap="openPreviewModal">查看成品</view>
+                </view>
+              </block>
+
+              <!-- 普通步骤 -->
+              <block wx:else>
+                <text class="flow-step__title {{item.done ? 'flow-step__title--done' : ''}}">{{item.title}}</text>
+                <text wx:if="{{item.timeFmt}}" class="flow-step__time">{{item.timeFmt}}</text>
+              </block>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 成品下载（回传成品后显示） -->
+    <block wx:if="{{resultGrid.length}}">
+      <view class="section-title">简历成品下载</view>
+      <view class="result-grid">
+        <view
+          wx:for="{{resultGrid}}"
+          wx:key="id"
+          class="result-cell {{item.empty ? 'result-cell--empty' : ''}} {{item.available ? 'result-cell--active' : 'result-cell--inactive'}}"
+          bindtap="onResultItemTap"
+          data-action="{{item.action}}"
+          data-available="{{item.available}}"
+        >
+          <view wx:if="{{!item.empty}}" class="result-cell__icon">
+            <image class="result-cell__icon-img" src="{{item.iconSrc}}" mode="aspectFit" />
+          </view>
+          <text wx:if="{{!item.empty}}" class="result-cell__label {{item.available ? 'result-cell__label--active' : ''}}">{{item.label}}</text>
+          <text wx:if="{{item.available}}" class="result-cell__badge">可下载</text>
+          <text wx:elif="{{!item.empty}}" class="result-cell__badge result-cell__badge--na">未导出</text>
+        </view>
+      </view>
+    </block>
+
+  </block>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       成品预览大弹窗
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <view wx:if="{{modal.visible}}" class="modal-mask" bindtap="closeModal">
+
+    <view class="modal-box" catchtap="stopPropagation">
+
+      <!-- 弹窗顶栏 -->
+      <view class="modal-header">
+        <view class="modal-tabs">
+          <view
+            class="modal-tab {{modal.tab===0 ? 'modal-tab--active' : ''}}"
+            bindtap="switchTab" data-tab="{{0}}"
+          >优化前</view>
+          <view
+            class="modal-tab {{modal.tab===1 ? 'modal-tab--active' : ''}}"
+            bindtap="switchTab" data-tab="{{1}}"
+          >优化后</view>
+          <view
+            class="modal-tab {{modal.tab===2 ? 'modal-tab--active' : ''}}"
+            bindtap="switchTab" data-tab="{{2}}"
+          >优化解析</view>
+        </view>
+        <view class="modal-close" bindtap="closeModal">✕</view>
+      </view>
+
+      <!-- 滑动内容区 -->
+      <swiper
+        class="modal-swiper"
+        current="{{modal.tab}}"
+        bindchange="onSwiperChange"
+        duration="250"
+      >
+
+        <!-- ── Tab 0：优化前 ── -->
+        <swiper-item>
+          <scroll-view scroll-y class="modal-scroll">
+            <view wx:if="{{order.clientOriginalUrls && order.clientOriginalUrls.length}}">
+              <view
+                wx:for="{{order.clientOriginalUrls}}"
+                wx:key="index"
+                class="img-wrap"
+              >
+                <image class="modal-img" src="{{item}}" mode="widthFix" lazy-load />
+                <!-- 水印层 -->
+                <view class="wm-layer">
+                  <text
+                    wx:for="{{wmItems}}"
+                    wx:key="index"
+                    wx:for-item="wm"
+                    class="wm-text"
+                    style="top:{{wm.top}}rpx;left:{{wm.left}}rpx;"
+                  >天鹿文化工作室</text>
+                </view>
+              </view>
+            </view>
+            <view wx:else class="modal-empty">暂无优化前预览图</view>
+          </scroll-view>
+        </swiper-item>
+
+        <!-- ── Tab 1：优化后 ── -->
+        <swiper-item>
+          <scroll-view scroll-y class="modal-scroll">
+            <view wx:if="{{order.clientPreviewUrls && order.clientPreviewUrls.length}}">
+              <view
+                wx:for="{{order.clientPreviewUrls}}"
+                wx:key="index"
+                class="img-wrap"
+              >
+                <image class="modal-img" src="{{item}}" mode="widthFix" lazy-load />
+                <!-- 水印层 -->
+                <view class="wm-layer">
+                  <text
+                    wx:for="{{wmItems}}"
+                    wx:key="index"
+                    wx:for-item="wm"
+                    class="wm-text"
+                    style="top:{{wm.top}}rpx;left:{{wm.left}}rpx;"
+                  >天鹿文化工作室</text>
+                </view>
+              </view>
+            </view>
+            <view wx:else class="modal-empty">暂无优化后预览图</view>
+          </scroll-view>
+        </swiper-item>
+
+        <!-- ── Tab 2：优化解析 ── -->
+        <swiper-item>
+          <scroll-view scroll-y class="modal-scroll">
+
+            <!-- 润色解析报告各章节 -->
+            <block wx:if="{{order.clientAnalysisReport}}">
+
+              <view class="ar-section" wx:if="{{order.clientAnalysisReport.position_analysis}}">
+                <view class="ar-section__title">岗位分析</view>
+                <text class="ar-section__text">{{order.clientAnalysisReport.position_analysis}}</text>
+              </view>
+
+              <view class="ar-section" wx:if="{{order.clientAnalysisReport.overall_strategy}}">
+                <view class="ar-section__title">整体润色策略</view>
+                <text class="ar-section__text">{{order.clientAnalysisReport.overall_strategy}}</text>
+              </view>
+
+              <view class="ar-section" wx:if="{{order.clientAnalysisReport.key_improvements && order.clientAnalysisReport.key_improvements.length}}">
+                <view class="ar-section__title">各模块优化重点</view>
+                <view
+                  wx:for="{{order.clientAnalysisReport.key_improvements}}"
+                  wx:key="index"
+                  class="ar-improvement"
+                >
+                  <text class="ar-improvement__num">{{index + 1}}</text>
+                  <text class="ar-improvement__text">{{item}}</text>
+                </view>
+              </view>
+
+              <view class="ar-section" wx:if="{{order.clientAnalysisReport.core_strengths}}">
+                <view class="ar-section__title">核心竞争力</view>
+                <text class="ar-section__text">{{order.clientAnalysisReport.core_strengths}}</text>
+              </view>
+
+              <view class="ar-section" wx:if="{{order.clientAnalysisReport.interview_suggestions}}">
+                <view class="ar-section__title">面试建议</view>
+                <text class="ar-section__text">{{order.clientAnalysisReport.interview_suggestions}}</text>
+              </view>
+
+            </block>
+            <view wx:else class="modal-empty">员工暂未回传润色解析报告</view>
+
+          </scroll-view>
+        </swiper-item>
+
+      </swiper>
+</view>
+</view>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════
+       简历分析报告弹窗（无图片，只展示文字分析内容）
+  ══════════════════════════════════════════════════════════════════════════ -->
+  <view wx:if="{{analysisMod.visible}}" class="modal-mask" bindtap="closeAnalysisModal">
+    <view class="modal-box am-box" catchtap="stopPropagation">
+
+      <!-- 顶栏 -->
+      <view class="modal-header am-header">
+        <view class="am-title">简历分析报告</view>
+        <view class="modal-close" bindtap="closeAnalysisModal">✕</view>
+      </view>
+
+      <!-- 评分 -->
+      <view class="am-score-row" wx:if="{{analysisMod.score}}">
+        <view class="am-score-circle">
+          <text class="am-score-val">{{analysisMod.score}}</text>
+          <text class="am-score-unit">分</text>
+        </view>
+        <view class="am-score-info">
+          <text class="am-score-level">{{analysisMod.level}}</text>
+          <text class="am-score-hint">综合评分</text>
+        </view>
+      </view>
+
+      <!-- 各维度分析条目 -->
+      <scroll-view scroll-y class="am-scroll">
+        <view class="am-scroll-inner">
+
+          <!-- 五维雷达图（岗位润色模式有 dimensionScores 时显示） -->
+          <view wx:if="{{analysisMod.dimensionItems.length}}" class="am-radar-wrap">
+
+            <!-- Canvas 主体 -->
+            <canvas
+              canvas-id="am-radar"
+              class="am-radar-canvas"
+              width="320"
+              height="300"
+            ></canvas>
+
+            <!-- 图例 -->
+            <view class="am-radar-legend">
+              <view class="am-radar-legend-item">
+                <view class="am-radar-dot am-radar-dot--industry"></view>
+                <text class="am-radar-legend-text">行业平均</text>
+              </view>
+              <view class="am-radar-legend-item">
+                <view class="am-radar-dot am-radar-dot--{{analysisMod.scoreLevel}}"></view>
+                <text class="am-radar-legend-text">您的简历</text>
+              </view>
+            </view>
+
+            <!-- 五维数值说明条 -->
+            <view class="am-radar-strip">
+              <view wx:for="{{analysisMod.dimensionItems}}" wx:key="label" class="am-radar-strip-item">
+                <text class="am-radar-strip-label">{{item.label}}</text>
+                <text class="am-radar-strip-val am-radar-val--{{analysisMod.scoreLevel}}">{{item.score}}/5</text>
+              </view>
+            </view>
+
+            <!-- 比较结论 -->
+            <view wx:if="{{analysisMod.radarCompareSummary}}" class="am-radar-compare am-radar-compare--{{analysisMod.radarCompareType}}">
+              <text>{{analysisMod.radarCompareSummary}}</text>
+            </view>
+
+          </view>
+
+          <view
+            wx:for="{{analysisMod.items}}"
+            wx:key="title"
+            class="am-item"
+          >
+            <view class="am-item__title">{{item.title}}</view>
+            <text class="am-item__content">{{item.content}}</text>
+          </view>
+          <view wx:if="{{!analysisMod.items.length}}" class="modal-empty">暂无分析内容</view>
+        </view>
+      </scroll-view>
+
+    </view>
+  </view>
+
+</view>

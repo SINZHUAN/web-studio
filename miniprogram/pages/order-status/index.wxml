@@ -1,0 +1,103 @@
+<view class="page">
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <view class="loading-ring" />
+    <text>加载中…</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{empty}}" class="empty-wrap">
+    <text class="empty-icon"></text>
+    <text class="empty-text">暂无订单</text>
+  </view>
+
+  <!-- 有订单：标签 + 列表 / 当前标签无数据 -->
+  <block wx:else>
+
+    <!-- ── 多选操作栏（选择模式时替换 tab 栏） ── -->
+    <view wx:if="{{selectMode}}" class="select-bar">
+      <view class="select-bar__cancel" bindtap="cancelSelect">取消</view>
+      <text class="select-bar__hint">已选 {{selectedIds.length}} 项</text>
+      <view class="select-bar__actions">
+        <view class="select-bar__btn" bindtap="toggleSelectAll">
+          {{isAllSelected ? '取消全选' : '全选'}}
+        </view>
+        <view
+          class="select-bar__delete {{selectedIds.length && !deleting ? '' : 'select-bar__delete--disabled'}}"
+          bindtap="deleteSelected"
+        >{{deleting ? '删除中…' : '删除'}}</view>
+      </view>
+    </view>
+
+    <!-- ── 普通 tab 栏 ── -->
+    <view wx:else class="order-tabs">
+      <view
+        class="order-tab {{activeTab === 'all' ? 'order-tab--active' : ''}}"
+        data-tab="all"
+        bindtap="onTabTap"
+      >全部</view>
+      <view
+        class="order-tab {{activeTab === 'pending' ? 'order-tab--active' : ''}}"
+        data-tab="pending"
+        bindtap="onTabTap"
+      >待确认</view>
+      <view
+        class="order-tab {{activeTab === 'completed' ? 'order-tab--active' : ''}}"
+        data-tab="completed"
+        bindtap="onTabTap"
+      >已完成</view>
+    </view>
+
+    <view wx:if="{{tabEmpty}}" class="tab-empty-wrap">
+      <text class="tab-empty-text">{{tabEmptyHint}}</text>
+    </view>
+
+    <block wx:else>
+      <!-- 列表头：普通模式显示条数 + 长按提示；选择模式显示当前筛选总数 -->
+      <view class="list-header">
+        <text>共 {{orders.length}} 条订单</text>
+        <text wx:if="{{!selectMode}}" class="list-header__tip">长按订单可多选删除</text>
+      </view>
+
+      <!-- 订单卡片列表 -->
+      <view
+        wx:for="{{orders}}"
+        wx:key="orderId"
+        class="order-card {{selectMode && selectedIds.includes(item.orderId) ? 'order-card--selected' : ''}} {{selectMode ? 'order-card--selectable' : ''}}"
+        bindtap="onTap"
+        bindlongpress="onLongPress"
+        data-orderid="{{item.orderId}}"
+      >
+        <!-- 勾选框（选择模式时显示） -->
+        <view wx:if="{{selectMode}}" class="order-checkbox {{selectedIds.includes(item.orderId) ? 'order-checkbox--checked' : ''}}">
+          <text wx:if="{{selectedIds.includes(item.orderId)}}" class="order-checkbox__tick">✓</text>
+        </view>
+
+        <!-- 卡片内容（选择模式时整体右移留出复选框空间） -->
+        <view class="order-card__content {{selectMode ? 'order-card__content--indent' : ''}}">
+          <view class="order-card__top">
+            <view class="order-top-main">
+              <view class="order-no">{{item.orderId}}</view>
+              <!-- pending 订单付款完成但尚未接单，不显示无意义的"待付款"标签 -->
+              <view wx:if="{{item.status !== 'pending'}}" class="order-status tag tag--{{item.status}}">{{item.statusLabel}}</view>
+              <!-- 绿色进展徽标：有任一进展未读时显示 -->
+              <view wx:if="{{item.hasNewProgress}}" class="progress-badge">进展更新</view>
+            </view>
+          </view>
+          <view class="order-card__mid">
+            <view class="biz-tag biz-tag--{{item.businessType === 'recognition' ? 'recognition' : 'optimize'}}">
+              <text class="biz-tag__text">{{item.businessType === 'recognition' ? '定制' : '优化'}}</text>
+            </view>
+            <text class="order-dot">·</text>
+            <text class="order-date">{{item.dateLabel}}</text>
+          </view>
+        </view>
+
+        <!-- 右箭头（普通模式）/ 无（选择模式） -->
+        <view wx:if="{{!selectMode}}" class="order-card__arrow">›</view>
+      </view>
+    </block>
+  </block>
+
+</view>

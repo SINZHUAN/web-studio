@@ -1,0 +1,138 @@
+<view class="page">
+
+  <!-- 初始化中 -->
+  <view wx:if="{{loading}}" class="init-state">
+    <view class="loading-ring" />
+    <text class="init-text">正在初始化…</text>
+  </view>
+
+  <!-- 错误提示 -->
+  <view wx:elif="{{initError}}" class="init-state">
+    <text class="error-text">{{initError}}</text>
+    <button class="retry-btn" bindtap="init">重新尝试</button>
+  </view>
+
+  <!-- 主内容 -->
+  <block wx:else>
+    <view class="home-main">
+    <!-- 服务卡片 -->
+    <view class="section-title-row">
+      <text class="section-title">请选择服务</text>
+      <view class="service-intro-btn" bindtap="openServiceIntroModal">
+        <text class="service-intro-btn__text">服务介绍</text>
+      </view>
+    </view>
+
+    <view class="service-cards">
+      <!-- 简历优化（激活） -->
+      <view class="service-card service-card--active" bindtap="goOptimize">
+        <view class="service-card__icon">✦</view>
+        <view class="service-card__content">
+          <view class="service-card__name">简历优化</view>
+          <view class="service-card__desc">已有简历，专业润色提升竞争力</view>
+        </view>
+        <view class="service-card__arrow">›</view>
+      </view>
+
+      <!-- 简历定制（已售罄，暂时禁用） -->
+      <view class="service-card service-card--disabled">
+        <view class="service-card__icon">◈</view>
+        <view class="service-card__content">
+          <view class="service-card__name">简历定制</view>
+          <view class="service-card__desc">AI识别旧简历，专业定制新版本</view>
+        </view>
+        <view class="service-card__tag service-card__tag--soldout">已售罄</view>
+      </view>
+    </view>
+
+    <!-- 我的订单入口 -->
+    <view class="orders-entry" bindtap="goMyOrders">
+      <view class="orders-entry__left">
+        <text class="orders-entry__text">我的订单</text>
+        <!-- 红点：有未确认预览时显示 -->
+        <view wx:if="{{previewNotifyCount > 0}}" class="orders-notify-dot">
+          <text class="orders-notify-tag">制作完成待确认</text>
+        </view>
+        <!-- 蓝点：有未读分析报告时显示 -->
+        <view wx:if="{{analysisNotifyCount > 0}}" class="orders-notify-dot orders-notify-dot--analysis">
+          <text class="orders-notify-tag">分析报告已回传</text>
+        </view>
+      </view>
+      <text class="orders-entry__arrow">›</text>
+    </view>
+
+    <!-- 我的订单下方：单个预留板块（占位，待后续填充） -->
+    <view class="home-top-slot">
+      <view class="home-top-slot__block" />
+    </view>
+
+    <!-- 品牌集标识：两行三列 -->
+    <view class="brand-grid">
+      <view class="brand-grid__item">
+        <image class="brand-grid__icon" src="/miniprogramImages/b_douyin.png" mode="aspectFit" />
+        <text class="brand-grid__name">天鹿简历</text>
+      </view>
+      <view class="brand-grid__item">
+        <image class="brand-grid__icon brand-grid__icon--lg" src="/miniprogramImages/b_gongzhonghao.png" mode="aspectFit" />
+        <text class="brand-grid__name">天鹿简历服务</text>
+      </view>
+      <view class="brand-grid__item">
+        <image class="brand-grid__icon brand-grid__icon--lg" src="/miniprogramImages/b_taobao.png" mode="aspectFit" />
+        <text class="brand-grid__name">天鹿文化旗舰店</text>
+      </view>
+      <view class="brand-grid__item">
+        <image class="brand-grid__icon brand-grid__icon--lg" src="/miniprogramImages/b_tianmao.png" mode="aspectFit" />
+        <text class="brand-grid__name">天鹿文化馆</text>
+      </view>
+      <view class="brand-grid__item">
+        <image class="brand-grid__icon" src="/miniprogramImages/b_xianyu.png" mode="aspectFit" />
+        <text class="brand-grid__name">天鹿简历服务店</text>
+      </view>
+      <view class="brand-grid__item">
+        <image class="brand-grid__icon" src="/miniprogramImages/b_xiaohongshu.png" mode="aspectFit" />
+        <text class="brand-grid__name">天鹿简历</text>
+      </view>
+    </view>
+
+    <view class="home-brand">
+      <text class="home-brand__text">天鹿简历·2026</text>
+    </view>
+    </view>
+
+    <!-- 服务介绍弹窗 -->
+    <view wx:if="{{serviceIntroVisible}}" class="svc-intro-overlay" catchtap="closeServiceIntroModal" catchtouchmove="noop">
+      <view class="svc-intro-dialog" catchtap="noop">
+        <view class="svc-intro-dialog__head">
+          <text class="svc-intro-dialog__head-title">服务介绍</text>
+          <view class="svc-intro-dialog__close" bindtap="closeServiceIntroModal">×</view>
+        </view>
+        <scroll-view
+          scroll-y
+          class="svc-intro-dialog__scroll"
+          show-scrollbar="{{false}}"
+          enable-flex="{{true}}"
+        >
+          <view class="svc-intro-card">
+            <view class="svc-intro-card__hd">
+              <text class="svc-intro-card__icon">✦</text>
+              <text class="svc-intro-card__name">简历优化</text>
+            </view>
+            <text class="svc-intro-card__lead">已有简历，专业润色提升竞争力</text>
+            <text class="svc-intro-card__para">适合已有一份初稿或成稿、希望在现有基础上再进一步的求职者。导师将结合目标岗位与行业习惯，对简历的结构层次、表述方式与视觉呈现进行梳理与润色，强化经历与成果的呈现逻辑，突出个人亮点与岗位匹配度，让内容更专业、更易读，从而提升简历竞争力。</text>
+          </view>
+          <view class="svc-intro-card svc-intro-card--muted">
+            <view class="svc-intro-card__hd">
+              <text class="svc-intro-card__icon">◈</text>
+              <text class="svc-intro-card__name">简历代做</text>
+              <text class="svc-intro-card__badge">已售罄</text>
+            </view>
+            <text class="svc-intro-card__lead">全新制作，从零开始打造竞争力</text>
+            <text class="svc-intro-card__para">适合希望从零梳理经历、由导师全程撰写完整简历的用户。通过沟通需求与素材收集，从零搭建框架并成稿，覆盖教育、实习/工作与项目等模块，形成一份可直接投递的成品。当前名额已满，首页入口显示「已售罄」；开放接单后将在此页开放下单。</text>
+          </view>
+        </scroll-view>
+        <button class="svc-intro-dialog__btn" bindtap="closeServiceIntroModal">知道了</button>
+      </view>
+    </view>
+  </block>
+
+</view>

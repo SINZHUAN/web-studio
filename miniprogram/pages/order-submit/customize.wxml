@@ -1,0 +1,716 @@
+<wxs src="./pickerMonthVal.wxs" module="pmv" />
+
+<view class="page">
+
+  <!-- ══ 提交成功页 ══ -->
+  <block wx:if="{{step === 'done'}}">
+    <view class="success-wrap">
+      <view class="success-icon">✓</view>
+      <view class="success-title">定制工单提交成功！</view>
+      <view class="success-sub">工单编号：{{orderId}}</view>
+      <view class="success-hint">工作人员将在工作时间内接单制作，完成后可在订单详情查看成品</view>
+      <view class="notify-card">
+        <view class="notify-card__body">
+          <view class="notify-card__title">{{subscribed ? '已开启完成提醒 ✓' : '开启制作完成提醒'}}</view>
+          <view class="notify-card__desc">{{subscribed ? '成品完成后将通过微信消息提醒您' : '成品完成时，直接通过微信消息通知您'}}</view>
+        </view>
+        <button wx:if="{{!subscribed}}" class="notify-card__btn" bindtap="requestNotification">开启</button>
+      </view>
+      <view class="success-btns">
+        <button class="btn-primary" bindtap="goOrderDetail">查看订单详情</button>
+        <button class="btn-secondary" bindtap="goHome">返回首页</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- ══ 提交中 ══ -->
+  <block wx:elif="{{step === 'submitting'}}">
+    <view class="loading-wrap">
+      <view class="loading-spinner"></view>
+      <view class="loading-text">正在提交工单...</view>
+    </view>
+  </block>
+
+  <!-- ══ 子页3：识别中 ══ -->
+  <block wx:elif="{{step === 'recognizing'}}">
+    <!-- 步骤指示器 -->
+    <view class="step-bar">
+      <view class="step-item step-item--done">
+        <view class="step-circle step-circle--done">✓</view>
+        <text class="step-label">选择模板</text>
+      </view>
+      <view class="step-line step-line--done"></view>
+      <view class="step-item step-item--done">
+        <view class="step-circle step-circle--done">✓</view>
+        <text class="step-label">填写参数</text>
+      </view>
+      <view class="step-line step-line--active"></view>
+      <view class="step-item step-item--active">
+        <view class="step-circle step-circle--active">3</view>
+        <text class="step-label step-label--active">识别结果</text>
+      </view>
+    </view>
+    <view class="loading-wrap">
+      <view class="loading-spinner"></view>
+      <view class="loading-text">{{recognizingStatus}}</view>
+      <view class="loading-sub">AI 识别通常需要 15~30 秒，请耐心等待</view>
+    </view>
+  </block>
+
+  <!-- ══ 子页3：识别结果审阅 ══ -->
+  <block wx:elif="{{step === 'review'}}">
+    <!-- 步骤指示器 -->
+    <view class="step-bar">
+      <view class="step-item step-item--done">
+        <view class="step-circle step-circle--done">✓</view>
+        <text class="step-label">选择模板</text>
+      </view>
+      <view class="step-line step-line--done"></view>
+      <view class="step-item step-item--done">
+        <view class="step-circle step-circle--done">✓</view>
+        <text class="step-label">填写参数</text>
+      </view>
+      <view class="step-line step-line--active"></view>
+      <view class="step-item step-item--active">
+        <view class="step-circle step-circle--active">3</view>
+        <text class="step-label step-label--active">识别结果</text>
+      </view>
+    </view>
+
+    <view class="review-page">
+      <view class="review-header">
+        <view class="review-title">旧简历识别结果</view>
+        <view class="review-sub">请确认以下识别到的简历内容，确认后提交工单由工作人员进行定制制作</view>
+      </view>
+
+      <!-- ── 可折叠模块列表 ── -->
+      <view class="review-body">
+        <view wx:if="{{collapsedModules.length === 0}}" class="review-empty">
+          未识别到内容，建议检查简历文档格式
+        </view>
+
+        <view
+          wx:for="{{collapsedModules}}"
+          wx:key="key"
+          wx:for-item="mod"
+          wx:for-index="modIdx"
+          class="mod-card mod-card--{{mod.status}}{{mod.isExp ? ' mod-card--exp' : ''}}"
+        >
+          <!-- 卡片头：点击折叠/展开 -->
+          <view class="mod-card__header" data-key="{{mod.key}}" bindtap="toggleModuleExpand">
+            <view class="mod-card__left">
+              <text class="mod-card__title">{{mod.label}}</text>
+            </view>
+            <view class="mod-card__right">
+              <text class="mod-status mod-status--{{mod.status}}">{{mod.statusText}}</text>
+              <text class="mod-card__arrow">{{expandedKeys[mod.key] ? '▲' : '▼'}}</text>
+            </view>
+          </view>
+
+          <!-- 卡片体：展开后内容 -->
+          <view wx:if="{{expandedKeys[mod.key]}}" class="mod-card__body">
+
+            <!-- 已识别字段（只读展示）；经历类为左主内容 + 右侧绿色「第N条」角标 -->
+            <view wx:if="{{mod.hasFields}}" class="mod-card__recognized">
+              <block wx:if="{{mod.isExp}}">
+                <view
+                  wx:for="{{mod.fields}}"
+                  wx:key="key"
+                  wx:for-item="field"
+                  wx:for-index="fieldIdx"
+                  class="review-field-row review-field-row--exp"
+                >
+                  <!-- 经历名称栏：标题与角标同一行（角标尺寸同补全区 gap-exp-badge） -->
+                  <view class="review-field-name-row">
+                    <text class="review-field__label review-field__label--exp-name">{{field.label}}</text>
+                    <view class="gap-exp-badge gap-exp-badge--inline gap-exp-badge--identified">
+                      <text class="gap-exp-badge__text">第 {{fieldIdx + 1}} 条</text>
+                    </view>
+                  </view>
+                  <text class="review-field__value">{{field.value || '—'}}</text>
+                </view>
+              </block>
+              <block wx:else>
+                <view
+                  wx:for="{{mod.fields}}"
+                  wx:key="key"
+                  wx:for-item="field"
+                  class="review-field"
+                >
+                  <text class="review-field__label">{{field.label}}</text>
+                  <text class="review-field__value">{{field.value || '—'}}</text>
+                </view>
+              </block>
+            </view>
+
+            <!-- 可编辑的补全字段 -->
+            <view wx:if="{{mod.hasGaps}}" class="mod-card__gaps">
+              <!-- ── experience 类模块：卡片分组布局（仿超级模式总结清单弹窗）── -->
+              <block wx:if="{{mod.isExp && mod.gapRecords}}">
+                <view
+                  wx:for="{{mod.gapRecords}}"
+                  wx:key="recKey"
+                  wx:for-item="rec"
+                  wx:for-index="recIdx"
+                  class="gap-exp-card {{rec.isNew ? 'gap-exp-card--new' : 'gap-exp-card--existing'}}"
+                >
+                  <!-- 补全角标：脱离文档流，浮在虚线框上沿（首条压在 mod-card__gaps 顶边），不再撑开上内边距 -->
+                  <view
+                    wx:if="{{rec.cardTitle}}"
+                    class="gap-exp-badge gap-exp-badge--supplement-float {{recIdx === 0 ? 'gap-exp-badge--on-top-border' : ''}}"
+                  >
+                    <text class="gap-exp-badge__text">{{rec.cardTitle}}</text>
+                  </view>
+
+                  <!-- 首行字段：仅标题+输入 -->
+                  <view wx:if="{{rec.hasFirstRow}}" class="gap-exp-lines">
+                    <view
+                      wx:for="{{rec.firstRow}}"
+                      wx:key="fieldKey"
+                      wx:for-item="fi"
+                      wx:for-index="fiIdx"
+                      class="gap-exp-line"
+                    >
+                      <text class="gap-exp-line__label">{{fi.label}}</text>
+                      <view class="gap-exp-line__right">
+                        <input
+                          class="gap-exp-line__input"
+                          placeholder-class="gap-exp-line__ph"
+                          placeholder="点击输入"
+                          value="{{fi.value}}"
+                          data-module-idx="{{fi.gapModuleIdx}}"
+                          data-item-idx="{{fi.itemIdx}}"
+                          data-col-mod-idx="{{modIdx}}"
+                          data-col-item-idx="{{fi.itemIdx}}"
+                          bindinput="onSupplementInput"
+                        />
+                      </view>
+                    </view>
+                  </view>
+
+                  <!-- 起止时间：同一下划线行，左标题右分段选月 -->
+                  <view wx:if="{{rec.hasTimeRow && rec.timeMerged}}" class="gap-exp-line gap-exp-line--time">
+                    <text class="gap-exp-line__label">{{rec.timeRangeTitle}}</text>
+                    <view class="gap-exp-line__vals">
+                      <picker
+                        wx:if="{{rec.timeMerged.start}}"
+                        mode="date"
+                        fields="month"
+                        value="{{pmv.toPickerMonth(rec.timeMerged.start.value)}}"
+                        data-module-idx="{{rec.timeMerged.start.gapModuleIdx}}"
+                        data-item-idx="{{rec.timeMerged.start.itemIdx}}"
+                        data-col-mod-idx="{{modIdx}}"
+                        data-col-item-idx="{{rec.timeMerged.start.itemIdx}}"
+                        bindchange="onTimePickerChange"
+                      >
+                        <view class="gap-exp-line__pick">
+                          <text class="gap-exp-line__seg {{rec.timeMerged.start.value ? 'gap-exp-line__seg--filled' : ''}}">{{rec.timeMerged.start.value || '开始时间'}}</text>
+                        </view>
+                      </picker>
+                      <text wx:if="{{rec.timeMerged.start && rec.timeMerged.end}}" class="gap-exp-line__dash"> — </text>
+                      <picker
+                        wx:if="{{rec.timeMerged.end}}"
+                        mode="date"
+                        fields="month"
+                        value="{{pmv.toPickerMonth(rec.timeMerged.end.value)}}"
+                        data-module-idx="{{rec.timeMerged.end.gapModuleIdx}}"
+                        data-item-idx="{{rec.timeMerged.end.itemIdx}}"
+                        data-col-mod-idx="{{modIdx}}"
+                        data-col-item-idx="{{rec.timeMerged.end.itemIdx}}"
+                        bindchange="onTimePickerChange"
+                      >
+                        <view class="gap-exp-line__pick">
+                          <text class="gap-exp-line__seg {{rec.timeMerged.end.value ? 'gap-exp-line__seg--filled' : ''}}">{{rec.timeMerged.end.value || '结束时间'}}</text>
+                        </view>
+                      </picker>
+                    </view>
+                  </view>
+
+                  <!-- 其他单行字段 -->
+                  <view wx:if="{{rec.hasOther}}" class="gap-exp-lines">
+                    <view
+                      wx:for="{{rec.otherItems}}"
+                      wx:key="fieldKey"
+                      wx:for-item="oi"
+                      class="gap-exp-line"
+                    >
+                      <text class="gap-exp-line__label">{{oi.label}}</text>
+                      <input
+                        class="gap-exp-line__input"
+                        placeholder-class="gap-exp-line__ph"
+                        placeholder="点击输入"
+                        value="{{oi.value}}"
+                        data-module-idx="{{oi.gapModuleIdx}}"
+                        data-item-idx="{{oi.itemIdx}}"
+                        data-col-mod-idx="{{modIdx}}"
+                        data-col-item-idx="{{oi.itemIdx}}"
+                        bindinput="onSupplementInput"
+                      />
+                    </view>
+                  </view>
+
+                  <!-- 描述内容块 -->
+                  <view wx:if="{{rec.hasContent}}" class="gap-exp-content-block">
+                    <text class="gap-exp-content-label">{{rec.contentItem.label}}</text>
+                    <textarea
+                      class="gap-exp-content-textarea"
+                      placeholder="选填，留空可跳过"
+                      value="{{rec.contentItem.value}}"
+                      data-module-idx="{{rec.contentItem.gapModuleIdx}}"
+                      data-item-idx="{{rec.contentItem.itemIdx}}"
+                      data-col-mod-idx="{{modIdx}}"
+                      data-col-item-idx="{{rec.contentItem.itemIdx}}"
+                      bindinput="onSupplementInput"
+                      auto-height
+                    />
+                  </view>
+                </view>
+              </block>
+
+              <!-- ── 非 experience 模块：平铺字段布局（时间字段用 picker）── -->
+              <block wx:else>
+                <view
+                  wx:for="{{mod.gapItemsFlat}}"
+                  wx:key="fieldKey"
+                  wx:for-item="gapItem"
+                  wx:for-index="gapItemIdx"
+                  class="supplement-field"
+                >
+                  <text class="supplement-field__label">{{gapItem.label}}</text>
+                  <!-- 时间字段：日期选择器 -->
+                  <picker
+                    wx:if="{{gapItem.isTime}}"
+                    mode="date"
+                    fields="month"
+                    value="{{gapItem.value}}"
+                    data-module-idx="{{gapItem.gapModuleIdx}}"
+                    data-item-idx="{{gapItem.itemIdx}}"
+                    data-col-mod-idx="{{modIdx}}"
+                    data-col-item-idx="{{gapItemIdx}}"
+                    bindchange="onTimePickerChange"
+                  >
+                    <view class="supplement-field__picker-val">
+                      <text class="{{gapItem.value ? 'picker-val--filled' : 'picker-val--placeholder'}}">{{gapItem.value || '点击选择时间'}}</text>
+                      <text class="picker-arrow">›</text>
+                    </view>
+                  </picker>
+                  <!-- 多行文本 -->
+                  <textarea
+                    wx:elif="{{gapItem.inputType === 'textarea'}}"
+                    class="supplement-field__textarea"
+                    placeholder="选填，留空可跳过"
+                    value="{{gapItem.value}}"
+                    data-module-idx="{{gapItem.gapModuleIdx}}"
+                    data-item-idx="{{gapItem.itemIdx}}"
+                    data-col-mod-idx="{{modIdx}}"
+                    data-col-item-idx="{{gapItemIdx}}"
+                    bindinput="onSupplementInput"
+                    auto-height
+                  />
+                  <!-- 普通文本输入 -->
+                  <input
+                    wx:else
+                    class="supplement-field__input"
+                    placeholder="选填，留空可跳过"
+                    value="{{gapItem.value}}"
+                    data-module-idx="{{gapItem.gapModuleIdx}}"
+                    data-item-idx="{{gapItem.itemIdx}}"
+                    data-col-mod-idx="{{modIdx}}"
+                    data-col-item-idx="{{gapItemIdx}}"
+                    bindinput="onSupplementInput"
+                  />
+                </view>
+              </block>
+            </view>
+
+            <!-- 整体未识别且无 gap 条目时的空态 -->
+            <view wx:if="{{!mod.hasFields && !mod.hasGaps}}" class="mod-card__empty">
+              暂无数据，可在此处选填
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="review-footer">
+        <button class="btn-outline" bindtap="reRecognize">重新识别</button>
+        <button class="btn-primary" bindtap="confirmSupplement">提交工单</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- ══ 子页3：补填表单 ══ -->
+  <block wx:elif="{{step === 'supplement'}}">
+    <!-- 步骤指示器 -->
+    <view class="step-bar">
+      <view class="step-item step-item--done">
+        <view class="step-circle step-circle--done">✓</view>
+        <text class="step-label">选择模板</text>
+      </view>
+      <view class="step-line step-line--done"></view>
+      <view class="step-item step-item--done">
+        <view class="step-circle step-circle--done">✓</view>
+        <text class="step-label">填写参数</text>
+      </view>
+      <view class="step-line step-line--active"></view>
+      <view class="step-item step-item--active">
+        <view class="step-circle step-circle--active">3</view>
+        <text class="step-label step-label--active">识别结果</text>
+      </view>
+    </view>
+
+    <view class="supplement-page">
+      <view class="supplement-header">
+        <view class="supplement-title">补充缺失内容</view>
+        <view class="supplement-sub">以下内容未从旧简历中识别到，请手动补充（可选填，留空将由工作人员联系确认）</view>
+      </view>
+
+      <scroll-view class="supplement-body" scroll-y>
+        <view
+          wx:for="{{gapModules}}"
+          wx:for-item="gap"
+          wx:key="moduleKey"
+          wx:for-index="moduleIdx"
+          class="supplement-module"
+        >
+          <view class="supplement-module__header">
+            <view class="supplement-module__tag {{gap.gapType === 'module' ? 'supplement-module__tag--module' : 'supplement-module__tag--fields'}}">
+              {{gap.gapType === 'module' ? '模块缺失' : '字段缺失'}}
+            </view>
+            <text class="supplement-module__label">{{gap.label}}</text>
+          </view>
+
+          <view class="supplement-module__fields">
+            <view
+              wx:for="{{gap.items}}"
+              wx:for-item="field"
+              wx:key="fieldKey"
+              wx:for-index="itemIdx"
+              class="supplement-field"
+            >
+              <text class="supplement-field__label">{{field.label}}</text>
+              <textarea
+                wx:if="{{field.inputType === 'textarea'}}"
+                class="supplement-field__textarea"
+                placeholder="选填，留空也可提交"
+                value="{{field.value}}"
+                data-module-idx="{{moduleIdx}}"
+                data-item-idx="{{itemIdx}}"
+                bindinput="onSupplementInput"
+                auto-height
+              />
+              <input
+                wx:else
+                class="supplement-field__input"
+                placeholder="选填，留空也可提交"
+                value="{{field.value}}"
+                data-module-idx="{{moduleIdx}}"
+                data-item-idx="{{itemIdx}}"
+                bindinput="onSupplementInput"
+              />
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="supplement-footer">
+        <button class="btn-outline" bindtap="skipSupplement">跳过，直接提交</button>
+        <button class="btn-primary" bindtap="confirmSupplement">确认补填并提交</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- ══ 子页2：参数填写 + 旧简历上传 ══ -->
+  <block wx:elif="{{step === 'params'}}">
+    <view wx:if="{{showEmailDropdown}}" class="email-mask" catchtap="closeEmailDropdown" />
+
+    <!-- 步骤指示器 -->
+    <view class="step-bar">
+      <view class="step-item step-item--done">
+        <view class="step-circle step-circle--done">✓</view>
+        <text class="step-label">选择模板</text>
+      </view>
+      <view class="step-line step-line--active"></view>
+      <view class="step-item step-item--active">
+        <view class="step-circle step-circle--active">2</view>
+        <text class="step-label step-label--active">填写参数</text>
+      </view>
+      <view class="step-line"></view>
+      <view class="step-item">
+        <view class="step-circle">3</view>
+        <text class="step-label">识别结果</text>
+      </view>
+    </view>
+
+    <view class="form-body">
+
+      <!-- ── 简历上传（置顶，便于先选文件） ── -->
+      <view class="card">
+        <view class="upload-card-head">
+          <text class="upload-card-head__title">上传旧版简历</text>
+          <text class="upload-card-head__hint">文件最大支持10MB</text>
+        </view>
+        <!-- 与简历优化页一致：单块点击区，成功态与「重新选择」合一 -->
+        <view class="file-zone" bindtap="chooseFile">
+          <view wx:if="{{!fileInfo}}" class="file-empty">
+            <text class="file-icon">📄</text>
+            <text class="file-text">点击选择简历文件</text>
+            <text class="file-sub">支持 .docx / .doc 格式，最大 10MB</text>
+          </view>
+          <view wx:else class="file-done">
+            <text class="file-done-icon">{{uploadedFileKey ? '✅' : '📄'}}</text>
+            <view class="file-done-info">
+              <text class="file-done-name">{{fileInfo.name}}</text>
+              <text class="file-done-change">{{uploadedFileKey ? '上传成功 · 点击重新选择' : '点击重新选择'}}</text>
+            </view>
+          </view>
+          <view wx:if="{{uploading}}" class="file-uploading">
+            <view class="upload-bar-track">
+              <view class="upload-bar-fill" style="width:{{uploadProgress}}%" />
+            </view>
+            <text class="upload-bar-text">上传中 {{uploadProgress}}%</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- ── 求职参数 ── -->
+      <view class="card">
+        <view class="card-title">制作参数</view>
+
+        <!-- 润色模式 -->
+        <view class="field-group">
+          <view class="field-label">润色模式</view>
+          <picker mode="selector" range="{{modeLabels}}" bindchange="onModeChange">
+            <view class="picker-row {{polishMode ? '' : 'picker-row--placeholder'}}">
+              <text>{{modeDisplayLabel}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <!-- 目标岗位（岗位润色时显示） -->
+        <view wx:if="{{polishMode === 'position'}}" class="field-group">
+          <view class="field-label">目标岗位</view>
+          <input
+            class="field-input field-input--picker-align"
+            placeholder="请输入目标岗位，如：产品经理"
+            value="{{targetPosition}}"
+            bindinput="onPositionInput"
+          />
+        </view>
+
+        <!-- 润色强度 -->
+        <view class="field-group">
+          <view class="field-label">润色强度</view>
+          <picker mode="selector" range="{{intensityLabels}}" bindchange="onIntensityChange">
+            <view class="picker-row {{polishingIntensity ? '' : 'picker-row--placeholder'}}">
+              <text>{{intensityDisplayLabel}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <!-- 职位 JD（可选） -->
+        <view class="field-group">
+          <view class="field-label-row">
+            <view class="field-label">职位 JD <text class="field-optional">（选填）</text></view>
+            <view class="toggle-btn" bindtap="toggleJdPanel">{{showJdPanel ? '收起' : '展开'}}</view>
+          </view>
+          <view wx:if="{{showJdPanel}}" class="jd-wrap">
+            <textarea
+              class="jd-input"
+              placeholder="粘贴岗位招聘要求，更精准地针对岗位润色简历"
+              value="{{jobDescription}}"
+              bindinput="onJdInput"
+              maxlength="2000"
+              auto-height
+            />
+          </view>
+        </view>
+      </view>
+
+      <!-- ── 邮箱（选填） ── -->
+      <view class="card">
+        <view class="card-title">收件邮箱 <text class="card-title--optional">（选填）</text></view>
+        <view class="email-wrap">
+          <input
+            class="field-input field-input--recipient-email"
+            placeholder="填写后成品将发送至邮箱"
+            type="email"
+            value="{{email}}"
+            bindinput="onEmailInput"
+          />
+          <view wx:if="{{showEmailDropdown}}" class="email-dropdown">
+            <view
+              wx:for="{{emailSuffixes}}"
+              wx:key="*this"
+              class="email-dropdown__item"
+              catchtap="onEmailSuffixTap"
+              data-suffix="{{item}}"
+            >{{emailPrefix}}{{item}}</view>
+          </view>
+        </view>
+      </view>
+
+    </view><!-- form-body -->
+
+    <!-- ── 底部操作栏：返回 + 开始提取 ── -->
+    <view class="bottom-bar bottom-bar--row">
+      <button class="btn-back" bindtap="goPrevStep">上一步</button>
+      <button class="btn-submit btn-submit--flex" bindtap="startRecognition">
+        开始提取
+      </button>
+    </view>
+
+    <!-- ══ 支付确认弹窗（底部抽屉，与简历优化保持一致）══ -->
+    <view wx:if="{{payVisible}}" class="pay-overlay" catchtap="closePayModal" catchtouchmove="noop">
+      <view class="pay-dialog" catchtap="noop">
+
+        <!-- 弹窗标题行 -->
+        <view class="pay-dialog__header">
+          <text class="pay-dialog__title">确认支付</text>
+          <view class="pay-dialog__close" bindtap="closePayModal">×</view>
+        </view>
+
+        <!-- 服务信息 -->
+        <view class="pay-service-block">
+          <view class="pay-service-row">
+            <text class="pay-service-key">服务项目</text>
+            <text class="pay-service-val">{{payServiceLabel}}</text>
+          </view>
+          <view class="pay-service-row">
+            <text class="pay-service-key">服务说明</text>
+            <text class="pay-service-val">导师专业简历定制，AI识别旧简历内容后一对一定制生成新简历，成品在订单详情页可下载使用</text>
+          </view>
+        </view>
+
+        <!-- 金额展示 -->
+        <view class="pay-amount-block">
+          <text class="pay-amount-label">应付金额</text>
+          <view class="pay-amount-price">
+            <text class="pay-amount-symbol">¥</text>
+            <text class="pay-amount-num">{{payPriceDisplay}}</text>
+          </view>
+        </view>
+
+        <!-- 微信支付按钮 -->
+        <button
+          class="pay-btn {{paying ? 'pay-btn--loading' : ''}}"
+          bindtap="handlePay"
+          disabled="{{paying}}"
+        >{{paying ? '处理中…' : '微信支付'}}</button>
+
+        <!-- 取消链接 -->
+        <view class="pay-cancel" bindtap="closePayModal">
+          <text class="pay-cancel__text">取消</text>
+        </view>
+
+      </view>
+    </view>
+
+  </block><!-- params -->
+
+  <!-- ══ 子页1：选择简历模板 ══ -->
+  <block wx:else><!-- step === 'template' -->
+
+    <!-- 步骤指示器 -->
+    <view class="step-bar">
+      <view class="step-item step-item--active">
+        <view class="step-circle step-circle--active">1</view>
+        <text class="step-label step-label--active">选择模板</text>
+      </view>
+      <view class="step-line"></view>
+      <view class="step-item">
+        <view class="step-circle">2</view>
+        <text class="step-label">填写参数</text>
+      </view>
+      <view class="step-line"></view>
+      <view class="step-item">
+        <view class="step-circle">3</view>
+        <text class="step-label">识别结果</text>
+      </view>
+    </view>
+
+    <view class="form-body">
+
+      <!-- ── 求职者身份 ── -->
+      <view class="card">
+        <view class="card-title">选择您的求职身份</view>
+        <view class="field-group" style="margin-bottom:0">
+          <picker mode="selector" range="{{identityLabels}}" bindchange="onIdentityChange">
+            <view class="picker-row {{userType ? '' : 'picker-row--placeholder'}}">
+              <text>{{identityDisplayLabel}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- ── 模板选择 ── -->
+      <view class="card">
+        <view class="card-title">选择简历模板</view>
+        <view wx:if="{{templatePreviewLoading}}" class="template-loading">
+          <view class="template-loading__spinner"></view>
+          <text class="template-loading__text">正在加载模板预览...</text>
+        </view>
+        <scroll-view scroll-x class="template-scroll" wx:else>
+          <view class="template-list">
+            <view
+              wx:for="{{templateOptions}}"
+              wx:key="id"
+              class="template-card {{selectedTemplateId === item.id ? 'template-card--active' : ''}} {{!item.available ? 'template-card--disabled' : ''}}"
+              bindtap="selectTemplate"
+              data-id="{{item.id}}"
+              data-label="{{item.label}}"
+              data-available="{{item.available}}"
+            >
+              <!-- 模板预览图（有图时点击放大预览，catchtap 避免触发卡片选中） -->
+              <view
+                wx:if="{{item.previewUrl}}"
+                class="template-card__preview"
+                catchtap="previewTemplateImage"
+                data-url="{{item.previewUrl}}"
+              >
+                <image
+                  src="{{item.previewUrl}}"
+                  mode="aspectFill"
+                  class="template-card__img"
+                  lazy-load
+                />
+              </view>
+              <view wx:else class="template-card__preview">
+                <view class="template-card__placeholder">
+                  <text class="template-card__num">{{item.label}}</text>
+                </view>
+              </view>
+              <!-- 模板标签 -->
+              <view class="template-card__footer">
+                <text class="template-card__name">{{item.label}}</text>
+              </view>
+              <!-- 即将上线蒙层（有预览图时可点击查看大图，与预览区逻辑一致） -->
+              <view
+                wx:if="{{!item.available}}"
+                class="template-card__coming-soon"
+                catchtap="onUnavailableTemplateOverlayTap"
+                data-url="{{item.previewUrl}}"
+              >
+                <text class="template-card__coming-text">即将上线</text>
+              </view>
+              <!-- 选中标记 -->
+              <view wx:if="{{selectedTemplateId === item.id}}" class="template-card__check">✓</view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+    </view><!-- form-body -->
+
+    <!-- ── 底部操作栏 ── -->
+    <view class="bottom-bar">
+      <button class="btn-submit" bindtap="goNextStep">
+        下一步
+      </button>
+    </view>
+
+  </block><!-- template -->
+
+</view>

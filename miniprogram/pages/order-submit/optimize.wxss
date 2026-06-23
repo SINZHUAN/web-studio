@@ -1,0 +1,674 @@
+/* ── 页面根容器 ── */
+page {
+  background: #f4f6fb;
+  min-height: 100vh;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 邮箱后缀遮罩（透明，捕获点击） ── */
+.email-mask {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 50;
+}
+
+/* ── 表单主体 ── */
+.form-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding: 20rpx 24rpx 160rpx;
+}
+
+/* ── 卡片 ── */
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+}
+/* 邮箱卡片允许子元素溢出（用于下拉浮层）*/
+.card--email {
+  overflow: visible;
+  padding: 24rpx 28rpx;
+  position: relative;
+  z-index: 60;
+}
+
+/* ── 分隔线 ── */
+.divider {
+  height: 1rpx;
+  background: #f0f2f7;
+  margin: 0 24rpx;
+}
+
+/* ── 简历文档标题行（与上传区分离，仅多一列帮助按钮）── */
+.file-label-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 28rpx 0;
+}
+.file-field-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ── 文件上传区 ── */
+.file-zone {
+  position: relative;
+  margin: 12rpx 20rpx 16rpx;
+  border: 3rpx dashed #b0c4e8;
+  border-radius: 16rpx;
+  background: #f5f8ff;
+  overflow: hidden;
+}
+.file-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28rpx 20rpx;
+  gap: 8rpx;
+}
+.file-icon { font-size: 52rpx; }
+.file-text { font-size: 30rpx; font-weight: 600; color: #1565C0; }
+.file-sub  { font-size: 24rpx; color: #aaa; }
+
+.file-done {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 24rpx;
+}
+.file-done-icon   { font-size: 44rpx; flex-shrink: 0; align-self: flex-start; }
+.file-done-info   {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6rpx;
+}
+.file-done-name   { font-size: 26rpx; color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; }
+.file-done-change { font-size: 22rpx; color: #1565C0; line-height: 1.35; }
+
+.file-uploading {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  padding: 0 40rpx;
+}
+.upload-bar-track {
+  width: 100%;
+  height: 8rpx;
+  background: #e3ecf8;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+.upload-bar-fill {
+  height: 100%;
+  background: #1565C0;
+  border-radius: 4rpx;
+  transition: width 0.3s;
+}
+.upload-bar-text { font-size: 24rpx; color: #888; }
+
+/* ── 行内选择行（picker 包裹）── */
+.field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22rpx 28rpx;
+  min-height: 80rpx;
+}
+.field-row--input {
+  gap: 16rpx;
+}
+.row-label-wrap {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  max-width: 52%;
+}
+.row-label {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  flex-shrink: 0;
+}
+.row-right {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex: 1;
+  justify-content: flex-end;
+}
+.row-val {
+  font-size: 28rpx;
+  color: #1565C0;
+  font-weight: 500;
+  text-align: right;
+  max-width: 340rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.row-val--filled { color: #2e7d32; }
+.row-placeholder { font-size: 28rpx; color: #bbb; }
+
+/* 箭头仅在未选择时出现 */
+.row-arrow {
+  font-size: 34rpx;
+  color: #bbb;
+  display: inline-block;
+  transform: rotate(90deg);
+  line-height: 1;
+  flex-shrink: 0;
+}
+/* JD 箭头带旋转动画 */
+.row-arrow--jd {
+  font-size: 34rpx;
+  color: #bbb;
+  display: inline-block;
+  transform: rotate(90deg);
+  line-height: 1;
+  flex-shrink: 0;
+  transition: transform 0.25s;
+}
+.row-arrow--jd-open { transform: rotate(-90deg); }
+
+/* 目标岗位输入：无底线，蓝色文字 */
+.row-input-blue {
+  flex: 1;
+  height: 60rpx;
+  border: none;
+  font-size: 28rpx;
+  color: #1565C0;
+  text-align: right;
+  background: transparent;
+  min-width: 0;
+}
+
+/* ── 职位 JD 折叠面板 ── */
+.jd-toggle { cursor: pointer; }
+.jd-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.jd-panel--open { max-height: 500rpx; }
+.jd-textarea {
+  display: block;
+  width: 100%;
+  min-height: 200rpx;
+  padding: 20rpx 28rpx;
+  font-size: 26rpx;
+  color: #1a1a2e;
+  background: #f9fafb;
+  line-height: 1.6;
+  border-top: 1rpx solid #f0f2f7;
+  box-sizing: border-box;
+}
+
+/* ── 邮箱卡片 ── */
+.email-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  margin-bottom: 16rpx;
+}
+.email-label { font-size: 28rpx; font-weight: 600; color: #333; line-height: 1.35; }
+.email-hint-below {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  color: #888;
+  line-height: 1.45;
+  text-align: left;
+}
+
+/* 帮助图标（catchtap，不冒泡，不影响 picker / 行点击） */
+.help-btn {
+  width: 36rpx;
+  height: 36rpx;
+  margin-left: 10rpx;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.help-btn__img {
+  width: 36rpx;
+  height: 36rpx;
+  display: block;
+}
+
+/* 填写指南弹窗 */
+.help-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 400;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48rpx 40rpx;
+  box-sizing: border-box;
+}
+.help-dialog {
+  width: 100%;
+  max-width: 620rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx 28rpx 24rpx;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+}
+.help-dialog__title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 20rpx;
+  text-align: center;
+}
+.help-dialog__body {
+  max-height: 520rpx;
+  box-sizing: border-box;
+}
+/* 润色强度：三块 + 引导语，单独加高滚动区 */
+.help-dialog__body--intensity {
+  max-height: 740rpx;
+}
+.help-dialog__intro {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1a2e;
+  text-align: center;
+  margin-bottom: 20rpx;
+  line-height: 1.5;
+}
+.help-dialog__text {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 1.65;
+  display: block;
+}
+/* 润色模式：上下两块淡蓝底 */
+.help-block {
+  margin-bottom: 16rpx;
+  border-radius: 16rpx;
+  padding: 20rpx 22rpx;
+  box-sizing: border-box;
+}
+.help-block:last-child {
+  margin-bottom: 0;
+}
+.help-block--pale {
+  background: #e8f4fc;
+  border: 1rpx solid #e3ecf4;
+}
+.help-block__head {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  margin-bottom: 10rpx;
+  gap: 0 4rpx;
+}
+.help-block__name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1565C0;
+}
+.help-block__subtitle {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #42a5f5;
+}
+.help-block__title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1565C0;
+  margin-bottom: 10rpx;
+}
+.help-block__text {
+  font-size: 26rpx;
+  color: #555;
+  line-height: 1.65;
+  display: block;
+}
+.help-dialog__btn {
+  margin-top: 28rpx;
+  width: 100%;
+  height: 88rpx;
+  padding: 0;
+  line-height: normal;
+  background: #1565C0;
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 20rpx;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.help-dialog__btn::after {
+  border: none;
+}
+
+/* 邮箱输入框 + 后缀下拉 */
+.email-input-wrap {
+  position: relative;
+  z-index: 60;
+}
+.email-input {
+  width: 100%;
+  height: 88rpx;
+  border: 2rpx solid #e8ecf4;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #1a1a2e;
+  background: #f9fafb;
+  box-sizing: border-box;
+}
+/* 有下拉时，输入框底部圆角去掉 */
+.email-input-wrap.has-dropdown .email-input {
+  border-radius: 16rpx 16rpx 0 0;
+  border-bottom-color: #e0e7f0;
+}
+
+/* 邮箱后缀下拉（绝对定位浮于输入框下方）*/
+.email-dp {
+  position: absolute;
+  top: 100%;
+  left: 0; right: 0;
+  z-index: 70;
+  background: #fff;
+  border: 2rpx solid #e8ecf4;
+  border-top: none;
+  border-radius: 0 0 16rpx 16rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.10);
+  overflow: hidden;
+}
+.email-dp-item {
+  padding: 20rpx 28rpx;
+  border-bottom: 1rpx solid #f4f6fb;
+}
+.email-dp-item:last-child { border-bottom: none; }
+.email-dp-item:active { background: #e8f0fe; }
+.email-preview { font-size: 28rpx; color: #333; }
+
+/* ── 功能说明列表 ── */
+.feature-list {
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+}
+.feature-item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12rpx;
+  padding: 8rpx 0;
+}
+/* 用 view 承载序号与正文，避免 <text> 在 flex 下整行独占、与正文错行 */
+.feature-num {
+  width: 44rpx;
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: #1565C0;
+  font-weight: 600;
+  line-height: 1.6;
+  text-align: center;
+}
+.feature-text {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+/* ── 底部固定按钮 ── */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 16rpx 24rpx calc(16rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  box-shadow: 0 -2rpx 16rpx rgba(0,0,0,0.06);
+}
+.btn-submit {
+  width: 100%;
+  height: 96rpx;
+  background: #1565C0;
+  border-radius: 20rpx;
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-submit--disabled { background: #b0bec5; }
+
+/* ── 成功页 ── */
+.success-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 60rpx 60rpx;
+  gap: 24rpx;
+}
+.success-icon {
+  width: 120rpx; height: 120rpx;
+  background: #e8f5e9;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 56rpx; color: #2e7d32; font-weight: 700;
+}
+.success-title { font-size: 40rpx; font-weight: 700; color: #1a1a2e; }
+.success-sub   { font-size: 28rpx; color: #1565C0; font-weight: 600; }
+.success-hint  { font-size: 26rpx; color: #888; text-align: center; line-height: 1.7; padding: 0 12rpx; }
+.success-btns  { width: 100%; margin-top: 20rpx; display: flex; flex-direction: column; gap: 20rpx; }
+.btn-primary {
+  width: 100%; height: 96rpx;
+  background: #1565C0; border-radius: 20rpx;
+  font-size: 30rpx; color: #fff; font-weight: 600; border: none;
+}
+.btn-secondary {
+  width: 100%; height: 96rpx;
+  background: #fff; border-radius: 20rpx;
+  font-size: 30rpx; color: #1565C0; font-weight: 600;
+  border: 2rpx solid #1565C0;
+}
+
+/* 订阅提醒卡片 */
+.notify-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16rpx;
+  background: #f0fdf4;
+  border: 2rpx solid #bbf7d0;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+  box-sizing: border-box;
+}
+.notify-card__body { flex: 1; min-width: 0; }
+.notify-card__title { font-size: 28rpx; font-weight: 700; color: #15803d; margin-bottom: 6rpx; }
+.notify-card__desc  { font-size: 22rpx; color: #4ade80; line-height: 1.5; }
+.notify-card__btn {
+  align-self: flex-end;
+  background: #17c964;
+  color: #fff;
+  font-size: 26rpx;
+  font-weight: 700;
+  padding: 14rpx 32rpx;
+  border-radius: 40rpx;
+  border: none;
+  white-space: nowrap;
+}
+
+/* ── 支付确认弹窗 ── */
+.pay-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.pay-dialog {
+  width: 100%;
+  background: #fff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 32rpx 40rpx calc(40rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.pay-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.pay-dialog__title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.pay-dialog__close {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #bbb;
+  font-weight: 300;
+}
+
+/* 服务信息块 */
+.pay-service-block {
+  background: #f7f9fd;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 28rpx;
+}
+
+.pay-service-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 10rpx 0;
+}
+
+.pay-service-row:first-child { padding-top: 0; }
+.pay-service-row:last-child  { padding-bottom: 0; }
+
+.pay-service-key {
+  font-size: 26rpx;
+  color: #888;
+  flex-shrink: 0;
+  width: 140rpx;
+}
+
+.pay-service-val {
+  font-size: 26rpx;
+  color: #1a1a2e;
+  font-weight: 500;
+  flex: 1;
+}
+
+/* 金额展示 */
+.pay-amount-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0 32rpx;
+  border-bottom: 1rpx solid #f0f2f7;
+  margin-bottom: 32rpx;
+}
+
+.pay-amount-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+}
+
+.pay-amount-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+
+.pay-amount-symbol {
+  font-size: 28rpx;
+  color: #e53935;
+  font-weight: 700;
+}
+
+.pay-amount-num {
+  font-size: 52rpx;
+  color: #e53935;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* 微信支付按钮 */
+.pay-btn {
+  width: 100%;
+  height: 96rpx;
+  background: #07c160;
+  border-radius: 20rpx;
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.pay-btn::after { border: none; }
+
+.pay-btn--loading {
+  background: #a0d6b4;
+}
+
+/* 取消文字 */
+.pay-cancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 0;
+}
+
+.pay-cancel__text {
+  font-size: 28rpx;
+  color: #aaa;
+}

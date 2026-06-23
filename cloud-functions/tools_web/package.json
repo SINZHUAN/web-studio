@@ -1,0 +1,19 @@
+{
+  "name": "tools_web",
+  "version": "1.0.0",
+  "description": "工具事务云函数：证件照制作、后续工具功能",
+  "main": "index.js",
+  "cloudfunction-config": {
+    "memory": 1024,
+    "timeout": 120
+  },
+  "dependencies": {
+    "cos-nodejs-sdk-v5": "^2.12.5",
+    "jsonwebtoken": "^9.0.0",
+    "axios": "^1.6.0",
+    "wx-server-sdk": "latest",
+    "nodemailer": "^6.9.8",
+    "jszip": "^3.10.1",
+    "pdf-lib": "^1.17.1"
+  }
+}

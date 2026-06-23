@@ -1,0 +1,244 @@
+.page { min-height: 100vh; background: #f4f6fb; padding: 24rpx 0 40rpx; }
+
+/* ── 顶部分类标签 ──────────────────────────────────────────────────────────── */
+.order-tabs {
+  display: flex;
+  align-items: stretch;
+  margin: 0 24rpx 24rpx;
+  padding: 6rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(21, 101, 192, 0.06);
+  gap: 8rpx;
+  box-sizing: border-box;
+}
+.order-tab {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #78909c;
+  padding: 18rpx 12rpx;
+  border-radius: 12rpx;
+}
+.order-tab--active {
+  background: linear-gradient(180deg, #1e88e5 0%, #1565C0 100%);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(21, 101, 192, 0.28);
+}
+
+/* ── 多选操作栏 ────────────────────────────────────────────────────────────── */
+.select-bar {
+  display: flex;
+  align-items: center;
+  margin: 0 24rpx 24rpx;
+  padding: 18rpx 24rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(21, 101, 192, 0.08);
+  gap: 12rpx;
+}
+
+.select-bar__cancel {
+  font-size: 28rpx;
+  color: #78909c;
+  padding: 8rpx 16rpx;
+  flex-shrink: 0;
+}
+
+.select-bar__hint {
+  flex: 1;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.select-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex-shrink: 0;
+}
+
+.select-bar__btn {
+  font-size: 26rpx;
+  color: #1565C0;
+  font-weight: 600;
+  padding: 8rpx 16rpx;
+  border-radius: 8rpx;
+  background: #e8f0fe;
+}
+
+.select-bar__delete {
+  font-size: 26rpx;
+  color: #fff;
+  font-weight: 600;
+  padding: 8rpx 24rpx;
+  border-radius: 8rpx;
+  background: #D32F2F;
+}
+
+.select-bar__delete--disabled {
+  background: #e0e0e0;
+  color: #aaa;
+}
+
+/* ── 当前标签下无订单 ─────────────────────────────────────────────────────── */
+.tab-empty-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 48rpx 80rpx;
+}
+.tab-empty-text {
+  font-size: 28rpx;
+  color: #bbb;
+}
+
+/* ── 加载 / 空状态 ─────────────────────────────────────────────────────────── */
+.loading-wrap, .empty-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 120rpx 40rpx; gap: 28rpx;
+  color: #888;
+}
+.loading-ring {
+  width: 80rpx; height: 80rpx;
+  border: 6rpx solid #e3f2fd;
+  border-top-color: #1565C0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-icon { font-size: 80rpx; }
+.empty-text { font-size: 30rpx; color: #bbb; }
+
+/* ── 列表头 ────────────────────────────────────────────────────────────────── */
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  font-size: 24rpx;
+  color: #bbb;
+  padding: 0 36rpx 20rpx;
+}
+.list-header__tip {
+  font-size: 22rpx;
+  color: #ccc;
+}
+
+/* ── 订单卡片 ──────────────────────────────────────────────────────────────── */
+.order-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 20rpx;
+  margin: 0 32rpx 20rpx;
+  padding: 32rpx 28rpx;
+  box-shadow: 0 2rpx 12rpx rgba(21,101,192,0.06);
+  transition: background 0.15s;
+}
+
+/* 选择模式下卡片可点击反馈 */
+.order-card--selectable {
+  transition: background 0.15s;
+}
+
+/* 已选中状态 */
+.order-card--selected {
+  background: #e8f0fe;
+  box-shadow: 0 2rpx 12rpx rgba(21,101,192,0.14);
+}
+
+/* 卡片内容区（选择模式缩进，为复选框留位） */
+.order-card__content {
+  flex: 1;
+  min-width: 0;
+}
+.order-card__content--indent {
+  margin-left: 16rpx;
+}
+
+.order-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 16rpx;
+}
+.order-top-main {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.order-no    { font-size: 28rpx; font-weight: 700; color: #1a1a2e; }
+.order-card__mid { display: flex; align-items: center; gap: 12rpx; }
+/* 统一业务类型标签（对应 web 端 biz-tag，视觉逻辑保持一致） */
+.biz-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8rpx;
+  padding: 2rpx 12rpx;
+  border-width: 1rpx; border-style: solid;
+}
+.biz-tag--optimize    { background: #e3f2fd; border-color: #90caf9; }
+.biz-tag--recognition { background: #e8f5e9; border-color: #a5d6a7; }
+.biz-tag__text {
+  font-size: 20rpx; font-weight: 700;
+}
+.biz-tag--optimize    .biz-tag__text { color: #1565C0; }
+.biz-tag--recognition .biz-tag__text { color: #2e7d32; }
+.order-dot   { color: #ccc; font-size: 26rpx; }
+.order-date  { font-size: 24rpx; color: #aaa; }
+
+.order-card__arrow {
+  flex-shrink: 0;
+  font-size: 44rpx;
+  color: #ccc;
+  margin-left: 8rpx;
+}
+
+/* ── 复选框 ────────────────────────────────────────────────────────────────── */
+.order-checkbox {
+  flex-shrink: 0;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 10rpx;
+  border: 3rpx solid #c8c8c8;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.order-checkbox--checked {
+  border-color: #1565C0;
+  background: #1565C0;
+}
+
+.order-checkbox__tick {
+  font-size: 26rpx;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ── 状态标签 ──────────────────────────────────────────────────────────────── */
+.order-status { font-size: 20rpx; }
+
+/* ── 绿色进展更新徽标（显示在状态标签右侧） ─────────────────────────────── */
+.progress-badge {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #1b5e20;
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border: 1rpx solid #a5d6a7;
+  border-radius: 20rpx;
+  padding: 4rpx 18rpx;
+  line-height: 1.4;
+  letter-spacing: 0;
+}

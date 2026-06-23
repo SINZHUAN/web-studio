@@ -1,0 +1,19 @@
+{
+  "name": "word_processor_web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "cloudfunction-config": {
+    "memory": 1024,
+    "timeout": 300
+  },
+  "dependencies": {
+    "wx-server-sdk": "latest",
+    "jsonwebtoken": "^9.0.0",
+    "cos-nodejs-sdk-v5": "^2.12.5",
+    "axios": "^1.6.0",
+    "docxtemplater": "^3.40.0",
+    "pizzip": "^3.1.4",
+    "image-size": "^1.1.1",
+    "docx": "^8.5.0"
+  }
+}

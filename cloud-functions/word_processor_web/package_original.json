@@ -1,0 +1,26 @@
+{
+  "name": "word_processor_clo",
+  "version": "1.0.0",
+  "description": "Word文档处理云函数",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^0.28.1",
+    "cos-nodejs-sdk-v5": "^2.12.4",
+    "docxtemplater": "^3.63.2",
+    "image-size": "^1.2.1",
+    "pizzip": "^3.2.0",
+    "tencentcloud-sdk-nodejs": "^4.0.3",
+    "wx-server-sdk": "~2.6.3"
+  },
+  "keywords": [
+    "word",
+    "docx",
+    "template",
+    "resume"
+  ],
+  "author": "",
+  "license": "ISC"
+}

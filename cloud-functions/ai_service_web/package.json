@@ -1,0 +1,14 @@
+{
+  "name": "ai_service_web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "cloudfunction-config": {
+    "memory": 1024,
+    "timeout": 300
+  },
+  "dependencies": {
+    "wx-server-sdk": "latest",
+    "jsonwebtoken": "^9.0.0",
+    "axios": "^1.6.0"
+  }
+}

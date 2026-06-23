@@ -1,0 +1,1254 @@
+page { background: #f4f6fb; min-height: 100vh; }
+
+.page { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ── Email overlay ── */
+.email-mask { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 50; }
+
+/* ── Form body ── */
+.form-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding: 20rpx 24rpx 160rpx;
+}
+
+/* ── Card ── */
+.card {
+  background: #fff;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+  padding: 24rpx 28rpx;
+}
+.card-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 20rpx;
+}
+.card-title--optional { font-size: 22rpx; font-weight: 400; color: #aaa; }
+
+/* 填写参数页 · 上传旧简历标题行 */
+.upload-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+}
+.upload-card-head__title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+  flex-shrink: 0;
+}
+.upload-card-head__hint {
+  font-size: 22rpx;
+  color: #aaa;
+  text-align: right;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Template loading ── */
+.template-loading {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx 0;
+}
+.template-loading__spinner {
+  width: 36rpx; height: 36rpx;
+  border: 4rpx solid #e8f0fe;
+  border-top-color: #1565C0;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+.template-loading__text { font-size: 24rpx; color: #aaa; }
+
+/* ── Template scroll + cards ── */
+.template-scroll { width: 100%; }
+.template-list {
+  display: flex;
+  flex-direction: row;
+  gap: 16rpx;
+  padding: 4rpx 2rpx 12rpx;
+  width: max-content;
+}
+
+.template-card {
+  width: 220rpx;
+  flex-shrink: 0;
+  border: 3rpx solid #e8ecf5;
+  border-radius: 16rpx;
+  overflow: hidden;
+  background: #fafbff;
+  position: relative;
+}
+.template-card--active {
+  border-color: #1565C0;
+  box-shadow: 0 0 0 2rpx rgba(21,101,192,0.2);
+}
+
+/* 预览图区域 */
+.template-card__preview {
+  width: 220rpx;
+  height: 300rpx;
+  background: #f0f4fc;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.template-card__img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.template-card__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #e8f0fe, #dce8fc);
+}
+.template-card__num {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1565C0;
+}
+
+/* 底部标签 */
+.template-card__footer {
+  padding: 12rpx 14rpx 14rpx;
+}
+.template-card__name {
+  display: block;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* 选中勾 */
+.template-card__check {
+  position: absolute;
+  top: 8rpx;
+  right: 10rpx;
+  width: 40rpx;
+  height: 40rpx;
+  background: #1565C0;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  font-weight: 700;
+}
+
+/* 禁用（即将上线）状态 */
+.template-card--disabled {
+  opacity: 0.6;
+}
+
+.template-card__coming-soon {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.template-card__coming-text {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0,0,0,0.5);
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  letter-spacing: 2rpx;
+}
+
+/* ── Field group ── */
+.field-group { margin-bottom: 20rpx; }
+.field-group:last-child { margin-bottom: 0; }
+.field-label { font-size: 24rpx; color: #888; margin-bottom: 10rpx; }
+.field-optional { font-size: 20rpx; color: #bbb; }
+.field-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10rpx; }
+.toggle-btn { font-size: 22rpx; color: #1565C0; }
+
+/* ── Picker ── */
+.picker-row {
+  display: flex; justify-content: space-between; align-items: center;
+  box-sizing: border-box;
+  min-height: 88rpx;
+  padding: 22rpx 20rpx;
+  border: 1rpx solid #e0e8f5;
+  border-radius: 12rpx;
+  background: #f7fbff;
+  font-size: 26rpx;
+  color: #1a1a1a;
+}
+.picker-row--placeholder { color: #bbb; }
+.picker-arrow { color: #bbb; font-size: 28rpx; }
+
+/* ── Input ── */
+.field-input {
+  display: block;
+  width: 100%;
+  padding: 18rpx 20rpx;
+  border: 1rpx solid #e0e8f5;
+  border-radius: 12rpx;
+  background: #f7fbff;
+  font-size: 26rpx;
+  color: #1a1a1a;
+  box-sizing: border-box;
+}
+
+/* 与参数页 picker-row（润色模式 / 润色强度）同高、同内边距 */
+.field-input--picker-align {
+  min-height: 88rpx;
+  padding: 22rpx 20rpx;
+  line-height: 1.45;
+}
+
+/* ── JD ── */
+.jd-wrap { margin-top: 8rpx; }
+.jd-input {
+  width: 100%;
+  min-height: 300rpx;
+  padding: 22rpx 20rpx;
+  border: 1rpx solid #e0e8f5;
+  border-radius: 12rpx;
+  background: #f7fbff;
+  font-size: 24rpx;
+  color: #1a1a1a;
+  box-sizing: border-box;
+}
+
+/* 填写参数页：收件邮箱输入框加高（仅样式，不改变绑定与类型） */
+.field-input--recipient-email {
+  min-height: 96rpx;
+  padding: 26rpx 20rpx;
+  line-height: 1.45;
+}
+
+/* ── 上传旧版简历（与 order-submit/optimize 简历文档区一致）── */
+.file-zone {
+  position: relative;
+  margin-top: 4rpx;
+  border: 3rpx dashed #b0c4e8;
+  border-radius: 16rpx;
+  background: #f5f8ff;
+  overflow: hidden;
+}
+.file-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48rpx 24rpx;
+  gap: 10rpx;
+}
+.file-icon { font-size: 52rpx; }
+.file-text { font-size: 30rpx; font-weight: 600; color: #1565C0; }
+.file-sub  { font-size: 24rpx; color: #aaa; }
+
+.file-done {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 32rpx 24rpx;
+}
+.file-done-icon   { font-size: 44rpx; flex-shrink: 0; align-self: flex-start; }
+.file-done-info   {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6rpx;
+}
+.file-done-name   {
+  font-size: 26rpx;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+.file-done-change { font-size: 22rpx; color: #1565C0; line-height: 1.35; }
+
+.file-uploading {
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  padding: 0 40rpx;
+}
+.upload-bar-track {
+  width: 100%;
+  height: 8rpx;
+  background: #e3ecf8;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+.upload-bar-fill {
+  height: 100%;
+  background: #1565C0;
+  border-radius: 4rpx;
+  transition: width 0.3s;
+}
+.upload-bar-text { font-size: 24rpx; color: #888; }
+
+/* ── Email ── */
+.email-wrap { position: relative; z-index: 60; }
+.email-dropdown {
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  background: #fff;
+  border: 1rpx solid #e0e8f5;
+  border-radius: 0 0 12rpx 12rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0,0,0,0.1);
+  z-index: 100;
+}
+.email-dropdown__item {
+  padding: 18rpx 20rpx;
+  font-size: 24rpx;
+  color: #333;
+  border-bottom: 1rpx solid #f0f2f7;
+}
+.email-dropdown__item:last-child { border-bottom: none; }
+
+/* ── Step indicator bar ── */
+.step-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28rpx 32rpx 20rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #f0f2f7;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+.step-item--active .step-circle { background: #1565C0; color: #fff; border-color: #1565C0; }
+.step-item--done  .step-circle  { background: #4caf50; color: #fff; border-color: #4caf50; }
+.step-circle {
+  width: 52rpx; height: 52rpx;
+  border-radius: 50%;
+  border: 2rpx solid #d0d8e8;
+  background: #f0f4fc;
+  color: #bbb;
+  font-size: 24rpx;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.step-circle--active { background: #1565C0; color: #fff; border-color: #1565C0; }
+.step-circle--done   { background: #4caf50; color: #fff; border-color: #4caf50; font-size: 22rpx; }
+.step-label {
+  font-size: 20rpx;
+  color: #bbb;
+  white-space: nowrap;
+}
+.step-label--active { color: #1565C0; font-weight: 700; }
+.step-line {
+  flex: 1;
+  height: 2rpx;
+  background: #e0e8f5;
+  margin: 0 12rpx;
+  margin-bottom: 24rpx; /* align with circle center */
+}
+.step-line--done   { background: #4caf50; }
+.step-line--active { background: #1565C0; }
+
+/* ── Bottom bar (fixed submit) ── */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  box-shadow: 0 -2rpx 12rpx rgba(0,0,0,0.08);
+}
+/* params 页底栏：左返回 + 右提取，并排 */
+.bottom-bar--row {
+  display: flex;
+  gap: 16rpx;
+}
+.btn-submit {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #1565C0, #1976D2);
+  color: #fff;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 8rpx 24rpx rgba(21,101,192,0.3);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-submit::after { border: none; }
+/* 在 bottom-bar--row 中 btn-submit 占剩余空间 */
+.btn-submit--flex {
+  flex: 1;
+  width: auto;
+}
+.btn-submit--flex::after { border: none; }
+/* 返回按钮（与 bottom-bar--row 内主按钮等宽） */
+.btn-back {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  height: 96rpx;
+  background: #f0f4fc;
+  color: #1565C0;
+  border: 2rpx solid #c0d4f8;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-back::after { border: none; }
+
+/* ── Loading ── */
+.loading-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24rpx; padding: 80rpx 40rpx;
+}
+.loading-spinner {
+  width: 64rpx; height: 64rpx;
+  border: 6rpx solid #e8f0fe;
+  border-top-color: #1565C0;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 28rpx; font-weight: 600; color: #1a1a1a; }
+.loading-sub  { font-size: 22rpx; color: #aaa; text-align: center; }
+
+/* ── Review page ── */
+.review-page { display: flex; flex-direction: column; min-height: 100vh; }
+.review-header {
+  padding: 32rpx 28rpx 20rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #f0f2f7;
+}
+.review-title { font-size: 32rpx; font-weight: 700; color: #1a1a1a; }
+.review-sub   { font-size: 22rpx; color: #888; margin-top: 8rpx; line-height: 1.5; }
+.review-body {
+  flex: 1;
+  padding: 16rpx 24rpx 140rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+.review-empty { text-align: center; color: #aaa; font-size: 26rpx; padding: 60rpx 0; }
+.review-section {
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+.review-section__header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18rpx 24rpx 14rpx;
+  background: #f0f6ff;
+  border-bottom: 1rpx solid #e0effe;
+}
+.review-section__title { font-size: 26rpx; font-weight: 700; color: #1565C0; }
+.review-section__count {
+  font-size: 20rpx; font-weight: 600; color: #fff;
+  background: #1565C0; padding: 2rpx 10rpx; border-radius: 12rpx;
+}
+.review-section__fields { padding: 12rpx 24rpx 16rpx; display: flex; flex-direction: column; gap: 10rpx; }
+.review-field { display: flex; flex-direction: column; gap: 4rpx; }
+.review-field__label { font-size: 20rpx; color: #aaa; }
+.review-field__value { font-size: 24rpx; color: #333; line-height: 1.5; }
+.review-footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; gap: 16rpx;
+  padding: 20rpx 24rpx 40rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 12rpx rgba(0,0,0,0.08);
+}
+
+/* ── 模块总览框 ── */
+.module-overview {
+  margin-top: 20rpx;
+  background: #f7f9fd;
+  border: 1rpx solid #e0eaf8;
+  border-radius: 16rpx;
+  padding: 20rpx 20rpx 0;
+  overflow: hidden;
+}
+.module-overview__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16rpx;
+  padding-bottom: 20rpx;
+}
+.module-tag {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 88rpx;
+  border-radius: 16rpx;
+  padding: 14rpx 8rpx;
+  box-sizing: border-box;
+}
+.module-tag--ok {
+  background: #e8f5e9;
+  border: 2rpx solid #a5d6a7;
+}
+.module-tag--gap {
+  background: #f5f5f5;
+  border: 2rpx solid #e0e0e0;
+}
+.module-tag__label {
+  font-size: 20rpx;
+  text-align: center;
+  line-height: 1.35;
+}
+.module-tag--ok  .module-tag__label { color: #388e3c; font-weight: 600; }
+.module-tag--gap .module-tag__label { color: #9e9e9e; }
+
+/* 总览框内底部缺口提示 */
+.overview-gap-hint {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 4rpx 18rpx;
+  border-top: 1rpx solid #e0eaf8;
+  margin-top: 4rpx;
+}
+.overview-gap-text { font-size: 22rpx; color: #666; line-height: 1.5; }
+
+/* ── 可折叠模块卡片（review 合并页）────────────────────────────────────────── */
+.mod-card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+  border: 1rpx solid #e8eaf0;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+/* 整体缺失：浅灰背景 */
+.mod-card--missing {
+  background: #f5f5f5;
+  border-color: #ddd;
+}
+/* 部分缺失：灰色左边框（与待填/补全输入区灰色系一致） */
+.mod-card--partial {
+  border-left: 4rpx solid #9e9e9e;
+}
+/* 完整：绿色左边框 */
+.mod-card--complete {
+  border-left: 4rpx solid #4CAF50;
+}
+
+/* 卡片头（可折叠模块标题区，略增高便于点击与阅读） */
+.mod-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 104rpx;
+  padding: 30rpx 24rpx 28rpx;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.mod-card--missing .mod-card__header {
+  padding-bottom: 30rpx;
+}
+
+.mod-card__left {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex: 1;
+  min-width: 0;
+}
+.mod-card__title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  flex-shrink: 0;
+}
+.mod-card--missing .mod-card__title { color: #999; }
+.mod-card__count {
+  font-size: 22rpx;
+  color: #999;
+  background: #f0f0f0;
+  padding: 2rpx 10rpx;
+  border-radius: 20rpx;
+}
+
+.mod-card__right {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-shrink: 0;
+}
+
+/* 状态徽章 */
+.mod-status {
+  font-size: 22rpx;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  font-weight: 500;
+}
+.mod-status--complete {
+  color: #2e7d32;
+  background: #e8f5e9;
+}
+.mod-status--partial {
+  color: #616161;
+  background: #e8e8e8;
+}
+.mod-status--missing {
+  color: #757575;
+  background: #eeeeee;
+}
+
+/* 折叠箭头 */
+.mod-card__arrow {
+  font-size: 22rpx;
+  color: #aaa;
+}
+
+/* 卡片体 */
+.mod-card__body {
+  padding: 0 24rpx 20rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+.mod-card--missing .mod-card__body {
+  border-top-color: #e0e0e0;
+}
+
+/* 已识别只读字段区 */
+.mod-card__recognized {
+  padding-top: 16rpx;
+}
+/* 经历类模块：已识别区做成与下方 .mod-card__gaps 同结构的圆角板块；实线 + 淡绿底（下方仍为虚线灰底） */
+.mod-card--exp .mod-card__recognized {
+  margin-top: 0;
+  padding: 20rpx 18rpx 22rpx;
+  background: #eef8f0;
+  border-radius: 10rpx;
+  border: 1rpx solid #a8d5b8;
+  box-sizing: border-box;
+}
+/* 经历类已识别：名称栏一行 + 描述一段；角标与 gap-exp-badge 同尺寸（见 .gap-exp-badge--inline / --identified） */
+.review-field-row--exp {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10rpx;
+}
+.review-field-row--exp:not(:last-child) {
+  margin-bottom: 28rpx;
+}
+.review-field-name-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 12rpx;
+  width: 100%;
+}
+/* 经历名称/职位摘要行：区别于正文，绿色 + 略大字（覆盖全局 .review-field__label 灰小字） */
+.mod-card--exp .review-field__label--exp-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 24rpx;
+  color: #2e7d32;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* 补全字段区：仅本层虚线框 + 淡灰底；内层经历卡片不再叠实线灰盒 */
+.mod-card__gaps {
+  margin-top: 20rpx;
+  background: #ececec;
+  border-radius: 10rpx;
+  position: relative;
+  /* 统一内边距；补全角标改为绝对定位浮在顶边，不再加大 padding-top */
+  padding: 22rpx 18rpx 22rpx;
+  border: 1rpx dashed #c8c8c8;
+}
+
+/* 空态提示 */
+.mod-card__empty {
+  padding: 20rpx 0 8rpx;
+  font-size: 24rpx;
+  color: #bbb;
+  text-align: center;
+}
+
+/* ── 平铺字段里的 picker（教育等非 exp 模块时间字段）── */
+.supplement-field__picker-val {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14rpx 16rpx;
+  background: #fff;
+  border: 1rpx solid #d8e8ff;
+  border-radius: 10rpx;
+  min-height: 72rpx;
+}
+.picker-val--filled {
+  font-size: 26rpx;
+  color: #212121;
+  font-weight: 500;
+}
+.picker-val--placeholder {
+  font-size: 24rpx;
+  color: #b0bec5;
+}
+.picker-arrow {
+  font-size: 30rpx;
+  color: #90A4AE;
+}
+
+/* ── experience 类模块补全卡片：无独立灰底/实线框，仅落在外层 mod-card__gaps 虚线区内 ── */
+.gap-exp-card {
+  position: relative;
+  /* 首张卡片略增顶距，避免首行字段与浮在顶边的角标视觉重叠 */
+  padding: 12rpx 0 12rpx;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  margin-bottom: 20rpx;
+}
+.gap-exp-card:last-child {
+  margin-bottom: 0;
+}
+.mod-card__gaps .gap-exp-card:first-child {
+  padding-top: 28rpx;
+}
+/* 保留类名供逻辑/WXML 区分；视觉与默认一致（无底无边） */
+.gap-exp-card--new {
+  border: none;
+  background: transparent;
+}
+.gap-exp-card--existing {
+  border: none;
+  background: transparent;
+}
+
+/* 角标：胶囊（两侧全圆）；默认绝对定位（兼容旧结构）；内联于首行时用 --inline */
+.gap-exp-badge {
+  position: absolute;
+  top: -14rpx;
+  left: auto;
+  right: -8rpx;
+  padding: 5rpx 16rpx;
+  min-height: 32rpx;
+  box-sizing: border-box;
+  border-radius: 9999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #9e9e9e 0%, #757575 100%);
+}
+.gap-exp-badge--inline {
+  position: static;
+  top: auto;
+  left: auto;
+  right: auto;
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+.gap-exp-badge--identified {
+  background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+}
+.gap-exp-card--existing .gap-exp-badge:not(.gap-exp-badge--identified) {
+  background: linear-gradient(135deg, #78909c 0%, #607d8b 100%);
+}
+.gap-exp-badge__text {
+  font-size: 18rpx;
+  color: #fff;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* 补全角标：绝对定位浮在卡片/虚线框上，不占流、不撑高 mod-card__gaps padding */
+.gap-exp-badge--supplement-float {
+  position: absolute;
+  left: auto;
+  right: 0;
+  top: -10rpx;
+  transform: translateY(-50%);
+  z-index: 5;
+}
+/* 首张补全卡片：相对 mod-card__gaps 顶边，使角标中心压在虚线上（与父级 padding-top 对齐上移） */
+.mod-card__gaps .gap-exp-card:first-child .gap-exp-badge--supplement-float.gap-exp-badge--on-top-border {
+  top: -22rpx;
+}
+
+/* 经历补全：下划线行（左黑字标题 + 右灰占位/内容） */
+.gap-exp-lines {
+  margin-bottom: 0;
+}
+/* 同一组内相邻题：增加「题目上方」与上一题分割线的间距，字段之间更易区分 */
+.gap-exp-lines .gap-exp-line + .gap-exp-line {
+  margin-top: 18rpx;
+}
+.gap-exp-line {
+  display: flex;
+  flex-direction: row;
+  /* 与右侧 input 底对齐，避免 center + 固定高度 input 把行撑高造成「字与底线」大空隙 */
+  align-items: flex-end;
+  min-height: 0;
+  padding: 0 0 1rpx;
+  border-bottom: 1rpx solid #c5c5c5;
+  box-sizing: border-box;
+}
+.gap-exp-line__label {
+  flex-shrink: 0;
+  max-width: 46%;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-right: 20rpx;
+  line-height: 1.2;
+}
+/* 首行：输入与角标并排；父级 .gap-exp-line 已为横向 flex */
+.gap-exp-line__right {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 10rpx;
+}
+.gap-exp-line__right .gap-exp-line__input {
+  flex: 1;
+  min-width: 0;
+}
+.gap-exp-line__input {
+  flex: 1;
+  min-width: 0;
+  /* 与正文行高一致，勿用过大 height，否则会撑高整行 */
+  height: 36rpx;
+  line-height: 36rpx;
+  text-align: right;
+  font-size: 28rpx;
+  color: #1a1a1a;
+  font-weight: 500;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+.gap-exp-line__ph {
+  color: #9e9e9e;
+  font-weight: 400;
+}
+.gap-exp-line__vals {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  min-width: 0;
+  gap: 4rpx;
+}
+.gap-exp-line__vals picker {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.gap-exp-line__pick {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0;
+  min-width: 0;
+  line-height: 1.2;
+}
+.gap-exp-line__seg {
+  font-size: 28rpx;
+  color: #9e9e9e;
+  font-weight: 400;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.gap-exp-line__seg--filled {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+.gap-exp-line__dash {
+  flex-shrink: 0;
+  font-size: 26rpx;
+  color: #bdbdbd;
+  padding: 0 4rpx;
+}
+.gap-exp-line--time {
+  gap: 0;
+  align-items: flex-end;
+}
+/* 时间栏紧跟在首组 gap-exp-lines 之后：略加大上边距，与上一题区分更明显 */
+.gap-exp-lines + .gap-exp-line--time {
+  margin-top: 28rpx;
+}
+/* 时间栏之后的其他单行字段区块首行 */
+.gap-exp-line--time + .gap-exp-lines .gap-exp-line:first-child {
+  margin-top: 18rpx;
+}
+
+/* 时间行内 picker 展示区 */
+.gap-exp-time-picker-val {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6rpx;
+}
+.gap-exp-time-val--filled {
+  font-size: 26rpx;
+  color: #212121;
+  font-weight: 500;
+}
+.gap-exp-time-val--placeholder {
+  font-size: 24rpx;
+  color: #b0bec5;
+}
+.gap-exp-time-arrow {
+  font-size: 28rpx;
+  color: #90A4AE;
+}
+
+/* 描述内容块 */
+.gap-exp-content-block {
+  margin-top: 12rpx;
+  padding: 14rpx 18rpx;
+  background: #FFFFFF;
+  border-radius: 8rpx;
+  border-left: 4rpx solid #9e9e9e;
+}
+/* 紧跟时间栏时略加大与「描述」的间距 */
+.gap-exp-line--time + .gap-exp-content-block {
+  margin-top: 20rpx;
+}
+.gap-exp-content-label {
+  display: block;
+  font-size: 22rpx;
+  color: #616161;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+  line-height: 1.25;
+}
+.gap-exp-content-textarea {
+  width: 100%;
+  font-size: 26rpx;
+  color: #424242;
+  line-height: 1.8;
+  min-height: 120rpx;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+/* 保留旧 review-gap-hint（无用但不影响）*/
+.review-gap-hint {
+  display: flex; align-items: center; gap: 10rpx;
+  margin-top: 16rpx; padding: 16rpx 20rpx;
+  background: #fff8e1; border-radius: 12rpx;
+  border: 1rpx solid #ffd54f;
+}
+.review-gap-icon { font-size: 28rpx; }
+.review-gap-text { font-size: 22rpx; color: #795548; line-height: 1.5; flex: 1; }
+
+/* ── 补填表单 ── */
+.supplement-page {
+  display: flex; flex-direction: column;
+  min-height: 100vh; background: #f7f8fc;
+}
+.supplement-header {
+  padding: 40rpx 32rpx 20rpx;
+  background: #fff;
+}
+.supplement-title { font-size: 36rpx; font-weight: 700; color: #1a1a1a; margin-bottom: 8rpx; }
+.supplement-sub { font-size: 24rpx; color: #888; line-height: 1.6; }
+
+.supplement-body {
+  flex: 1;
+  padding: 20rpx 24rpx 160rpx;
+}
+
+.supplement-module {
+  background: #fff; border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+.supplement-module__header {
+  display: flex; align-items: center; gap: 14rpx;
+  padding: 20rpx 24rpx;
+  background: #f7fbff;
+  border-bottom: 1rpx solid #e8f0fe;
+}
+.supplement-module__tag {
+  font-size: 18rpx; font-weight: 700; padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+.supplement-module__tag--module { background: #fce4ec; color: #c62828; }
+.supplement-module__tag--fields { background: #fff8e1; color: #e65100; }
+.supplement-module__label { font-size: 26rpx; font-weight: 600; color: #1a1a1a; }
+
+.supplement-module__fields {
+  padding: 16rpx 24rpx;
+  display: flex; flex-direction: column; gap: 20rpx;
+}
+.supplement-field { display: flex; flex-direction: column; gap: 8rpx; }
+.supplement-field__label { font-size: 22rpx; color: #555; font-weight: 600; }
+.supplement-field__input {
+  padding: 16rpx 18rpx;
+  background: #f7f8fc; border: 1rpx solid #e0e0e0;
+  border-radius: 10rpx; font-size: 26rpx; color: #333;
+  width: 100%; box-sizing: border-box;
+}
+.supplement-field__textarea {
+  padding: 16rpx 18rpx;
+  background: #f7f8fc; border: 1rpx solid #e0e0e0;
+  border-radius: 10rpx; font-size: 24rpx; color: #333;
+  width: 100%; box-sizing: border-box;
+  min-height: 120rpx; line-height: 1.6;
+}
+
+.supplement-footer {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; gap: 16rpx;
+  padding: 20rpx 24rpx 40rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 12rpx rgba(0,0,0,0.08);
+}
+
+/* ── Buttons ── */
+.btn-primary {
+  flex: 1;
+  padding: 24rpx;
+  background: linear-gradient(135deg, #1565C0, #1976D2);
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+}
+.btn-outline {
+  flex: 1;
+  padding: 24rpx;
+  background: #fff;
+  color: #1565C0;
+  border: 2rpx solid #90b4f0;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+}
+.btn-secondary {
+  flex: 1;
+  padding: 24rpx;
+  background: #f0f4fc;
+  color: #555;
+  border: none;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+}
+
+/* ── Success page ── */
+.success-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 24rpx;
+  padding: 80rpx 40rpx 60rpx;
+}
+.success-icon { font-size: 88rpx; color: #4caf50; }
+.success-title { font-size: 36rpx; font-weight: 700; color: #1a1a1a; }
+.success-sub   { font-size: 24rpx; color: #888; }
+.success-hint  { font-size: 22rpx; color: #aaa; text-align: center; line-height: 1.6; }
+.notify-card {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: 24rpx; background: #f0f6ff; border: 1rpx solid #c0d8f8;
+  border-radius: 16rpx; box-sizing: border-box;
+}
+.notify-card__body { flex: 1; }
+.notify-card__title { font-size: 26rpx; font-weight: 600; color: #1a1a1a; }
+.notify-card__desc  { font-size: 20rpx; color: #888; margin-top: 4rpx; }
+.notify-card__btn {
+  padding: 12rpx 24rpx; background: #1565C0; color: #fff;
+  border-radius: 10rpx; font-size: 24rpx; font-weight: 600;
+  margin: 0; margin-left: 16rpx;
+}
+.success-btns { width: 100%; display: flex; flex-direction: column; gap: 16rpx; }
+
+/* ════════════════════════════════════════════════════════
+   支付弹窗（与简历优化 optimize.wxss 完全一致）
+   ════════════════════════════════════════════════════════ */
+.pay-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.pay-dialog {
+  width: 100%;
+  background: #fff;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 32rpx 40rpx calc(40rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+}
+
+.pay-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.pay-dialog__title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.pay-dialog__close {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #bbb;
+  font-weight: 300;
+}
+
+/* 服务信息块 */
+.pay-service-block {
+  background: #f7f9fd;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 28rpx;
+}
+
+.pay-service-row {
+  display: flex;
+  align-items: flex-start;
+  padding: 10rpx 0;
+}
+
+.pay-service-row:first-child { padding-top: 0; }
+.pay-service-row:last-child  { padding-bottom: 0; }
+
+.pay-service-key {
+  font-size: 26rpx;
+  color: #888;
+  flex-shrink: 0;
+  width: 140rpx;
+}
+
+.pay-service-val {
+  font-size: 26rpx;
+  color: #1a1a2e;
+  font-weight: 500;
+  flex: 1;
+}
+
+/* 金额展示 */
+.pay-amount-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0 32rpx;
+  border-bottom: 1rpx solid #f0f2f7;
+  margin-bottom: 32rpx;
+}
+
+.pay-amount-label {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 600;
+}
+
+.pay-amount-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4rpx;
+}
+
+.pay-amount-symbol {
+  font-size: 28rpx;
+  color: #e53935;
+  font-weight: 700;
+}
+
+.pay-amount-num {
+  font-size: 52rpx;
+  color: #e53935;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* 微信支付按钮 */
+.pay-btn {
+  width: 100%;
+  height: 96rpx;
+  background: #07c160;
+  border-radius: 20rpx;
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: 700;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.pay-btn::after { border: none; }
+
+.pay-btn--loading {
+  background: #a0d6b4;
+}
+
+/* 取消文字 */
+.pay-cancel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8rpx 0;
+}
+
+.pay-cancel__text {
+  font-size: 28rpx;
+  color: #aaa;
+}

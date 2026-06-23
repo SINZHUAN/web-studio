@@ -1,0 +1,396 @@
+.page {
+  height: 100vh;
+  min-height: 100vh;
+  background: #f4f6fb;
+  padding-top: 24rpx;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* 我的订单下方：单个预留板块（占位，待后续填充） */
+.home-top-slot {
+  padding: 0 32rpx;
+  margin-top: 24rpx;
+  margin-bottom: 8rpx;
+}
+.home-top-slot__block {
+  min-height: 280rpx;
+  border-radius: 20rpx;
+  background: #fff;
+  border: 2rpx dashed #e0e6f0;
+  box-sizing: border-box;
+}
+
+/* 品牌集：两行三列，小图标+名称 */
+.brand-grid {
+  margin: 56rpx 32rpx 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18rpx 12rpx;
+}
+/* 临时隐藏品牌集区域（WXML 保留）；恢复时删除本段即可 */
+.brand-grid {
+  display: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 0;
+}
+.brand-grid__title {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #7b8596;
+  letter-spacing: 2rpx;
+  margin-bottom: 4rpx;
+}
+.brand-grid__item {
+  background: #fff;
+  border-radius: 16rpx;
+  border: 1rpx solid #ebeff7;
+  min-height: 124rpx;
+  padding: 18rpx 10rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.brand-grid__icon {
+  width: 52rpx;
+  height: 52rpx;
+  margin-bottom: 8rpx;
+}
+.brand-grid__icon--lg {
+  width: 58rpx;
+  height: 58rpx;
+}
+.brand-grid__name {
+  font-size: 20rpx;
+  color: #5b6475;
+  line-height: 1.25;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* 原首页服务/订单/品牌整体区域 */
+.home-main {
+  padding-bottom: 32rpx;
+}
+
+/* 初始化 */
+.init-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 40rpx;
+  gap: 32rpx;
+}
+.loading-ring {
+  width: 80rpx; height: 80rpx;
+  border: 6rpx solid #e3f2fd;
+  border-top-color: #2196F3;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.init-text { color: #888; font-size: 28rpx; }
+.error-text { color: #e53935; font-size: 28rpx; text-align: center; }
+.retry-btn {
+  padding: 16rpx 48rpx;
+  background: #2196F3; color: #fff;
+  border-radius: 40rpx; font-size: 28rpx;
+  border: none;
+}
+
+/* 标题行：请选择服务 + 服务介绍 */
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin: 40rpx 32rpx 20rpx 40rpx;
+}
+.section-title {
+  flex: 1;
+  min-width: 0;
+  font-size: 28rpx;
+  color: #888;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+.service-intro-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx 24rpx;
+  border-radius: 999rpx;
+  background: #2196F3;
+  border: none;
+  box-shadow: 0 2rpx 8rpx rgba(33, 150, 243, 0.28);
+  box-sizing: border-box;
+}
+.service-intro-btn:active {
+  opacity: 0.9;
+}
+.service-intro-btn__text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 1rpx;
+  line-height: 1;
+}
+
+/* 服务卡片 */
+.service-cards { padding: 0 32rpx; display: flex; flex-direction: column; gap: 20rpx; }
+
+.service-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 20rpx;
+  padding: 36rpx 28rpx;
+  box-shadow: 0 2rpx 16rpx rgba(33, 150, 243, 0.07);
+  gap: 24rpx;
+}
+.service-card--active {
+  border: 2rpx solid #2196F3;
+}
+
+.service-card__icon {
+  font-size: 48rpx;
+  width: 80rpx;
+  text-align: center;
+  color: #2196F3;
+  flex-shrink: 0;
+}
+
+.service-card__content { flex: 1; }
+.service-card__name {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 8rpx;
+}
+.service-card__desc { font-size: 24rpx; color: #888; }
+
+.service-card__arrow {
+  font-size: 48rpx;
+  color: #2196F3;
+  font-weight: 300;
+}
+.service-card__tag {
+  background: #f0f4fa;
+  color: #aaa;
+  font-size: 22rpx;
+  padding: 6rpx 16rpx;
+  border-radius: 16rpx;
+  flex-shrink: 0;
+}
+.service-card__tag--soldout {
+  background: #ffebee;
+  color: #c62828;
+  font-weight: 600;
+}
+.service-card--disabled {
+  /* 与简历优化入口一致，保留蓝色边缘；仅视觉调整，不改变禁用逻辑 */
+  border: 2rpx solid #2196F3;
+}
+
+/* 我的订单（高度与上方服务卡片入口对齐） */
+.orders-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border-radius: 20rpx;
+  margin: 20rpx 32rpx 0;
+  padding: 30rpx 28rpx;
+  min-height: 160rpx;
+  box-sizing: border-box;
+  box-shadow: 0 2rpx 10rpx rgba(33, 150, 243, 0.07);
+}
+.orders-entry__left {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  flex: 1;
+}
+.orders-entry__text { font-size: 30rpx; font-weight: 600; color: #1a1a2e; }
+.orders-entry__arrow { font-size: 40rpx; color: #2196F3; }
+
+/* 待确认通知标签 */
+.orders-notify-dot {
+  display: flex;
+  align-items: center;
+}
+.orders-notify-tag {
+  background: #17c964;
+  color: #fff;
+  font-size: 20rpx;
+  font-weight: 700;
+  padding: 4rpx 14rpx;
+  border-radius: 20rpx;
+  letter-spacing: 1rpx;
+  animation: pulse 1.8s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.85; transform: scale(0.97); }
+}
+
+/* 分析报告 badge（蓝色） */
+.orders-notify-dot--analysis .orders-notify-tag {
+  background: #2196F3;
+}
+
+/* 底部品牌文案 */
+.home-brand {
+  padding: 54rpx 32rpx 40rpx;
+  text-align: center;
+}
+.home-brand__text {
+  font-size: 24rpx;
+  color: #b0b8c8;
+  font-weight: 400;
+  letter-spacing: 2rpx;
+}
+
+/* 服务介绍弹窗（蓝色系内容 + 灰黑遮罩） */
+.svc-intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 400;
+  background: rgba(0, 0, 0, 0.58);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 28rpx;
+  box-sizing: border-box;
+}
+.svc-intro-dialog {
+  width: 100%;
+  max-width: 640rpx;
+  max-height: 86vh;
+  background: #fff;
+  border-radius: 28rpx;
+  overflow: hidden;
+  box-shadow: 0 24rpx 64rpx rgba(0, 0, 0, 0.22);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border: 1rpx solid rgba(33, 150, 243, 0.12);
+}
+.svc-intro-dialog__head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 24rpx 24rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #f0f2f5;
+}
+.svc-intro-dialog__head-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1976D2;
+  letter-spacing: 2rpx;
+}
+.svc-intro-dialog__close {
+  width: 56rpx;
+  height: 56rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  color: #78909c;
+  line-height: 1;
+}
+.svc-intro-dialog__scroll {
+  flex: none;
+  height: 58vh;
+  min-height: 440rpx;
+  padding: 20rpx 20rpx 8rpx;
+  box-sizing: border-box;
+}
+.svc-intro-card {
+  padding: 8rpx 4rpx 22rpx;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+.svc-intro-card--muted {
+  margin-top: 4rpx;
+  padding-top: 22rpx;
+  border-top: 1rpx solid #e3e8ef;
+  background: transparent;
+}
+.svc-intro-card__hd {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10rpx 12rpx;
+  margin-bottom: 12rpx;
+}
+.svc-intro-card__icon {
+  font-size: 36rpx;
+  color: #2196F3;
+}
+.svc-intro-card__name {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2196F3;
+}
+.svc-intro-card__badge {
+  margin-left: auto;
+  font-size: 20rpx;
+  font-weight: 700;
+  color: #c62828;
+  background: #ffebee;
+  padding: 4rpx 14rpx;
+  border-radius: 999rpx;
+}
+.svc-intro-card__lead {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #37474f;
+  margin-bottom: 14rpx;
+  line-height: 1.45;
+}
+.svc-intro-card__para {
+  display: block;
+  font-size: 26rpx;
+  color: #546e7a;
+  line-height: 1.7;
+  text-align: justify;
+}
+.svc-intro-dialog__btn {
+  flex-shrink: 0;
+  align-self: center;
+  margin: 8rpx auto 28rpx;
+  width: 280rpx;
+  height: 84rpx;
+  padding: 0 32rpx;
+  line-height: normal;
+  background: linear-gradient(180deg, #42A5F5 0%, #2196F3 100%);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  border-radius: 999rpx;
+  border: none;
+  box-shadow: 0 6rpx 18rpx rgba(33, 150, 243, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.svc-intro-dialog__btn::after {
+  border: none;
+}

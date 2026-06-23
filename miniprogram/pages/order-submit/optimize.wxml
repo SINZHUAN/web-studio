@@ -1,0 +1,310 @@
+<view class="page">
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 提交成功页 -->
+  <!-- ══════════════════════════════════════════════ -->
+  <block wx:if="{{submitted}}">
+    <view class="success-wrap">
+      <view class="success-icon">✓</view>
+      <view class="success-title">工单提交成功！</view>
+      <view class="success-sub">工单编号：{{orderId}}</view>
+      <view class="success-hint">工作人员将在工作时间内接单制作，完成后成品发送至您的邮箱</view>
+
+      <!-- 订阅消息授权入口 -->
+      <view class="notify-card">
+        <view class="notify-card__body">
+          <view class="notify-card__title">{{subscribed ? '已开启完成提醒 ✓' : '开启制作完成提醒'}}</view>
+          <view class="notify-card__desc">{{subscribed ? '成品完成后将通过微信消息提醒您' : '成品完成时，直接通过微信消息通知您查看'}}</view>
+        </view>
+        <button
+          wx:if="{{!subscribed}}"
+          class="notify-card__btn"
+          bindtap="requestNotification"
+        >开启</button>
+      </view>
+
+      <view class="success-btns">
+        <button class="btn-primary" bindtap="goOrderDetail">查看订单详情</button>
+        <button class="btn-secondary" bindtap="goHome">返回首页</button>
+      </view>
+    </view>
+  </block>
+
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- 填写页 -->
+  <!-- ══════════════════════════════════════════════ -->
+  <block wx:else>
+
+    <!-- 邮箱后缀下拉的透明遮罩 -->
+    <view wx:if="{{showEmailDropdown}}" class="email-mask" catchtap="closeEmailDropdown" />
+
+    <view class="form-body">
+
+      <!-- ── 卡片：简历文档 + 润色参数 + 求职者身份 ── -->
+      <view class="card">
+
+        <view class="file-label-row">
+          <text class="file-field-label">简历文档</text>
+          <view class="help-btn" catchtap="showFieldHelp" data-key="resume">
+            <image class="help-btn__img" src="/miniprogramImages/bangzhu.png" mode="aspectFit" />
+          </view>
+        </view>
+
+        <!-- 简历文档上传区 -->
+        <view class="file-zone" bindtap="chooseFile">
+          <!-- TODO [PDF支持待完善]: PDF 入口已暂时隐藏，恢复时替换以下文案和图标逻辑 -->
+          <view wx:if="{{!fileInfo}}" class="file-empty">
+            <text class="file-icon">📄</text>
+            <text class="file-text">点击选择 Word 文档</text>
+            <text class="file-sub">支持 .docx / .doc 格式</text>
+          </view>
+          <view wx:else class="file-done">
+            <text class="file-done-icon">{{uploadedFileKey ? '✅' : '📄'}}</text>
+            <view class="file-done-info">
+              <text class="file-done-name">{{fileInfo.name}}</text>
+              <text class="file-done-change">{{uploadedFileKey ? '上传成功 · 点击重新选择' : '点击重新选择'}}</text>
+            </view>
+          </view>
+          <view wx:if="{{uploading}}" class="file-uploading">
+            <view class="upload-bar-track">
+              <view class="upload-bar-fill" style="width:{{uploadProgress}}%" />
+            </view>
+            <text class="upload-bar-text">上传中 {{uploadProgress}}%</text>
+          </view>
+        </view>
+
+        <view class="divider" />
+
+        <!-- 润色模式（picker）-->
+        <picker mode="selector" range="{{modeLabels}}" value="{{modeIndex}}" bindchange="onModeChange">
+          <view class="field-row">
+            <view class="row-label-wrap">
+              <text class="row-label">润色模式</text>
+              <view class="help-btn" catchtap="showFieldHelp" data-key="polishMode">
+                <image class="help-btn__img" src="/miniprogramImages/bangzhu.png" mode="aspectFit" />
+              </view>
+            </view>
+            <view class="row-right">
+              <text class="row-val {{!polishMode ? 'row-placeholder' : ''}}">{{modeDisplayLabel}}</text>
+              <text wx:if="{{!polishMode}}" class="row-arrow">›</text>
+            </view>
+          </view>
+        </picker>
+
+        <!-- 目标岗位（仅岗位润色模式显示）-->
+        <block wx:if="{{polishMode === 'position'}}">
+          <view class="divider" />
+          <view class="field-row field-row--input">
+            <view class="row-label-wrap">
+              <text class="row-label">目标岗位</text>
+              <view class="help-btn" catchtap="showFieldHelp" data-key="targetPosition">
+                <image class="help-btn__img" src="/miniprogramImages/bangzhu.png" mode="aspectFit" />
+              </view>
+            </view>
+            <input class="row-input-blue" placeholder="如：产品经理"
+                   placeholder-class="row-placeholder" value="{{targetPosition}}"
+                   bindinput="onPositionInput" maxlength="30" />
+          </view>
+        </block>
+
+        <view class="divider" />
+
+        <!-- 润色强度（picker）-->
+        <picker mode="selector" range="{{intensityLabels}}" value="{{intensityIndex}}" bindchange="onIntensityChange">
+          <view class="field-row">
+            <view class="row-label-wrap">
+              <text class="row-label">润色强度</text>
+              <view class="help-btn" catchtap="showFieldHelp" data-key="intensity">
+                <image class="help-btn__img" src="/miniprogramImages/bangzhu.png" mode="aspectFit" />
+              </view>
+            </view>
+            <view class="row-right">
+              <text class="row-val {{!polishingIntensity ? 'row-placeholder' : ''}}">{{intensityDisplayLabel}}</text>
+              <text wx:if="{{!polishingIntensity}}" class="row-arrow">›</text>
+            </view>
+          </view>
+        </picker>
+
+        <view class="divider" />
+
+        <!-- 求职者身份（picker）-->
+        <picker mode="selector" range="{{identityLabels}}" value="{{identityIndex}}" bindchange="onIdentityChange">
+          <view class="field-row">
+            <view class="row-label-wrap">
+              <text class="row-label">求职者身份</text>
+              <view class="help-btn" catchtap="showFieldHelp" data-key="identity">
+                <image class="help-btn__img" src="/miniprogramImages/bangzhu.png" mode="aspectFit" />
+              </view>
+            </view>
+            <view class="row-right">
+              <text class="row-val {{!userIdentity ? 'row-placeholder' : ''}}">{{identityDisplayLabel}}</text>
+              <text wx:if="{{!userIdentity}}" class="row-arrow">›</text>
+            </view>
+          </view>
+        </picker>
+
+      </view>
+
+      <!-- ── 卡片：职位 JD（仅岗位模式，可展开）── -->
+      <view class="card" wx:if="{{polishMode === 'position'}}">
+        <view class="field-row jd-toggle" bindtap="toggleJdPanel">
+          <view class="row-label-wrap">
+            <text class="row-label">职位 JD (选填)</text>
+            <view class="help-btn" catchtap="showFieldHelp" data-key="jobDescription">
+              <image class="help-btn__img" src="/miniprogramImages/bangzhu.png" mode="aspectFit" />
+            </view>
+          </view>
+          <view class="row-right">
+            <text class="row-val {{jobDescription ? 'row-val--filled' : 'row-placeholder'}}">
+              {{jobDescription ? '已填写' : '选填，提升润色精准度'}}
+            </text>
+            <text class="row-arrow row-arrow--jd {{showJdPanel ? 'row-arrow--jd-open' : ''}}">›</text>
+          </view>
+        </view>
+        <view class="jd-panel {{showJdPanel ? 'jd-panel--open' : ''}}">
+          <textarea class="jd-textarea"
+                    placeholder="粘贴招聘要求，AI 将结合岗位 JD 精准润色…"
+                    placeholder-class="row-placeholder"
+                    value="{{jobDescription}}"
+                    bindinput="onJdInput"
+                    maxlength="2000"
+                    auto-height />
+        </view>
+      </view>
+
+      <!-- ── 卡片：收件邮箱 ── -->
+      <view class="card card--email">
+        <view class="email-label-row">
+          <text class="email-label">收件邮箱</text>
+          <view class="help-btn" catchtap="showFieldHelp" data-key="email">
+            <image class="help-btn__img" src="/miniprogramImages/bangzhu.png" mode="aspectFit" />
+          </view>
+        </view>
+        <view class="email-input-wrap {{showEmailDropdown ? 'has-dropdown' : ''}}">
+          <input class="email-input" type="text" placeholder="请输入您的邮箱"
+                 placeholder-class="row-placeholder" value="{{email}}"
+                 bindinput="onEmailInput" />
+          <!-- 常用后缀建议 -->
+          <view class="email-dp" wx:if="{{showEmailDropdown}}" catchtap="noop">
+            <view
+              wx:for="{{emailSuffixes}}"
+              wx:key="index"
+              class="email-dp-item"
+              data-suffix="{{item}}"
+              bindtap="selectEmailSuffix"
+            >
+              <text class="email-preview">{{emailPrefix}}{{item}}</text>
+            </view>
+          </view>
+        </view>
+        <text class="email-hint-below">选填，订单完成后可在「我的订单」-「订单详情页」下载成品简历</text>
+      </view>
+
+      <!-- ── 功能说明 ── -->
+      <view class="feature-list">
+        <view class="feature-item">
+          <view class="feature-num">①</view>
+          <view class="feature-text">
+            {{polishMode === 'position' ? '填写完整润色优化要求，导师将根据要求优化简历' : '填写完整润色与优化要求，导师将根据要求优化简历'}}
+          </view>
+        </view>
+        <view class="feature-item">
+          <view class="feature-num">②</view>
+          <view class="feature-text">如有疑问，可点击选项上的帮助按钮查看详情指南</view>
+        </view>
+        <view class="feature-item">
+          <view class="feature-num">③</view>
+          <view class="feature-text">
+            {{polishMode === 'position' ? '结合目标岗位逐段润色，保留原有排版样式' : '基于经历本身逐段润色，保留原有排版样式'}}
+          </view>
+        </view>
+      </view>
+
+    </view>
+
+    <!-- 填写指南弹窗（仅展示，不改变表单数据） -->
+    <view wx:if="{{helpVisible}}" class="help-overlay" catchtap="closeFieldHelp" catchtouchmove="noop">
+      <view class="help-dialog" catchtap="noop">
+        <view class="help-dialog__title">{{helpTitle}}</view>
+        <scroll-view class="help-dialog__body {{helpTallBody ? 'help-dialog__body--intensity' : ''}}" scroll-y>
+          <block wx:if="{{helpVariant === 'blocks'}}">
+            <view wx:if="{{helpIntro}}" class="help-dialog__intro">{{helpIntro}}</view>
+            <view
+              wx:for="{{helpBlocks}}"
+              wx:for-item="blk"
+              wx:for-index="bidx"
+              wx:key="bidx"
+              class="help-block help-block--pale"
+            >
+              <view wx:if="{{blk.name}}" class="help-block__head">
+                <text class="help-block__name">{{blk.name}}</text>
+                <text wx:if="{{blk.subtitle}}" class="help-block__subtitle">{{blk.subtitle}}</text>
+              </view>
+              <view wx:elif="{{blk.title}}" class="help-block__title">{{blk.title}}</view>
+              <text class="help-block__text">{{blk.text}}</text>
+            </view>
+          </block>
+          <text wx:else class="help-dialog__text">{{helpContent}}</text>
+        </scroll-view>
+        <button class="help-dialog__btn" bindtap="closeFieldHelp">知道了</button>
+      </view>
+    </view>
+
+    <!-- 支付确认弹窗 -->
+    <view wx:if="{{payVisible}}" class="pay-overlay" catchtap="closePayModal" catchtouchmove="noop">
+      <view class="pay-dialog" catchtap="noop">
+
+        <!-- 弹窗标题行 -->
+        <view class="pay-dialog__header">
+          <text class="pay-dialog__title">确认支付</text>
+          <view class="pay-dialog__close" bindtap="closePayModal">×</view>
+        </view>
+
+        <!-- 服务信息 -->
+        <view class="pay-service-block">
+          <view class="pay-service-row">
+            <text class="pay-service-key">服务项目</text>
+            <text class="pay-service-val">{{payServiceLabel}}</text>
+          </view>
+          <view class="pay-service-row">
+            <text class="pay-service-key">服务说明</text>
+            <text class="pay-service-val">导师专业简历优化，简历成品后续发送至邮箱和订单详情页面可下载使用</text>
+          </view>
+        </view>
+
+        <!-- 金额展示 -->
+        <view class="pay-amount-block">
+          <text class="pay-amount-label">应付金额</text>
+          <view class="pay-amount-price">
+            <text class="pay-amount-symbol">¥</text>
+            <text class="pay-amount-num">{{payPriceDisplay}}</text>
+          </view>
+        </view>
+
+        <!-- 支付按钮 -->
+        <button
+          class="pay-btn {{paying ? 'pay-btn--loading' : ''}}"
+          bindtap="handlePay"
+          disabled="{{paying}}"
+        >{{paying ? '处理中…' : '微信支付'}}</button>
+
+        <!-- 取消链接 -->
+        <view class="pay-cancel" bindtap="closePayModal">
+          <text class="pay-cancel__text">取消</text>
+        </view>
+
+      </view>
+    </view>
+
+    <!-- 底部固定提交按钮 -->
+    <view class="bottom-bar">
+      <button
+        class="btn-submit {{(submitting || uploading) ? 'btn-submit--disabled' : ''}}"
+        bindtap="submitOrder"
+        disabled="{{submitting || uploading}}"
+      >{{submitting ? '提交中…' : uploading ? '上传中…' : '提交工单'}}</button>
+    </view>
+
+  </block>
+
+</view>

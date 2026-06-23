@@ -1,0 +1,16 @@
+{
+  "name": "commission_web",
+  "version": "1.0.0",
+  "description": "代做工单云函数：客户工单采集、员工接单、管理分配",
+  "main": "index.js",
+  "cloudfunction-config": {
+    "memory": 256,
+    "timeout": 30
+  },
+  "dependencies": {
+    "cos-nodejs-sdk-v5": "^2.12.5",
+    "jsonwebtoken": "^9.0.0",
+    "axios": "^1.6.0",
+    "wx-server-sdk": "latest"
+  }
+}

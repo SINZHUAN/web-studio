@@ -1,0 +1,21 @@
+/**
+ * 展示用 YYYY.MM → picker mode=date fields=month 所需 YYYY-MM
+ */
+function toPickerMonth(v) {
+  if (!v) return ''
+  if (typeof v != 'string') return ''
+  if (v.length >= 7 && v.indexOf('-') >= 0) {
+    return v.substring(0, 7)
+  }
+  var dot = v.indexOf('.')
+  if (dot < 0) return ''
+  var y = v.substring(0, dot)
+  var m = v.substring(dot + 1)
+  if (m.length === 1) m = '0' + m
+  if (m.length > 2) m = m.substring(0, 2)
+  return y + '-' + m
+}
+
+module.exports = {
+  toPickerMonth: toPickerMonth,
+}

@@ -361,6 +361,10 @@ import { docToImage } from '@/api/recognition'
 import { enhancePolishSection } from '@/api/ai'
 import WpsEditorModal from '@/components/resume-enhance/WpsEditorModal.vue'
 import { preloadWpsSdk, preWarmWpsConfig, clearWpsConfigCache } from '@/utils/wpsSdk'
+import iconDaochuWord from '@images/daochu_word.png'
+import iconDaochuPdf from '@images/daochu_pdf.png'
+import iconDaochuImage from '@images/daochu_image.png'
+import iconDaochuBaogao from '@images/daochu_baogao.png'
 
 const emit = defineEmits(['save-and-exit'])
 
@@ -404,7 +408,7 @@ const bundleOptions = computed(() => [
   {
     id: 'word',
     name: '成品简历 Word',
-    iconSrc: '/images/daochu_word.png',
+    iconSrc: iconDaochuWord,
     desc: '可二次编辑的 .docx 格式',
     unavailableDesc: '暂无成品文档',
     available: !!store.polishedFileKey || !!store.wordDownloadUrl,
@@ -412,7 +416,7 @@ const bundleOptions = computed(() => [
   {
     id: 'pdf',
     name: '成品简历 PDF',
-    iconSrc: '/images/daochu_pdf.png',
+    iconSrc: iconDaochuPdf,
     desc: '由 Word 转换的真实 PDF',
     unavailableDesc: '暂无成品文档',
     available: !!store.polishedFileKey || !!store.wordDownloadUrl,
@@ -420,7 +424,7 @@ const bundleOptions = computed(() => [
   {
     id: 'images',
     name: '成品简历图片',
-    iconSrc: '/images/daochu_image.png',
+    iconSrc: iconDaochuImage,
     desc: `共 ${store.previewImages.length} 张 PNG 预览图`,
     unavailableDesc: '暂无预览图',
     available: store.previewImages.length > 0,
@@ -428,7 +432,7 @@ const bundleOptions = computed(() => [
   {
     id: 'analysis',
     name: '定制解析报告',
-    iconSrc: '/images/daochu_baogao.png',
+    iconSrc: iconDaochuBaogao,
     desc: '优化策略 & 面试建议文本报告',
     unavailableDesc: '尚未生成解析，请先在"润色解析"页生成',
     available: !!store.summaryData,

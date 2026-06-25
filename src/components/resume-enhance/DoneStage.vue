@@ -599,6 +599,11 @@ import { useIDPhotoStore } from '@/stores/idPhoto'
 import { useWorkorderStore }  from '@/stores/workorder'
 import { useCommissionStore } from '@/stores/commission'
 import { apiCompleteCommissionOrder, apiSaveCommissionProgress, apiSendCommissionPreview, apiSendCommissionResult } from '@/api/commission'
+import iconDaochuWord from '@images/daochu_word.png'
+import iconDaochuPdf from '@images/daochu_pdf.png'
+import iconDaochuImage from '@images/daochu_image.png'
+import iconDaochuBaogao from '@images/daochu_baogao.png'
+import iconDaochuZhengjianzhao from '@images/daochu_zhengjianzhao.png'
 
 const emit = defineEmits(['save-and-exit'])
 
@@ -669,7 +674,7 @@ const bundleOptions = computed(() => {
     {
       id: 'word',
       name: '简历成品 Word',
-      iconSrc: '/images/daochu_word.png',
+      iconSrc: iconDaochuWord,
       desc: '可二次编辑的 .docx 格式',
       unavailableDesc: '暂无润色文档',
       available: hasWord
@@ -677,7 +682,7 @@ const bundleOptions = computed(() => {
     {
       id: 'pdf',
       name: '简历成品 PDF',
-      iconSrc: '/images/daochu_pdf.png',
+      iconSrc: iconDaochuPdf,
       desc: '由预览图合成的 PDF（便于查阅）',
       unavailableDesc: '暂无预览图，无法生成 PDF',
       available: hasImages
@@ -685,7 +690,7 @@ const bundleOptions = computed(() => {
     {
       id: 'images',
       name: '简历成品图片',
-      iconSrc: '/images/daochu_image.png',
+      iconSrc: iconDaochuImage,
       desc: `共 ${store.polishedPreviewUrls.length} 张 PNG 预览图`,
       unavailableDesc: '暂无预览图',
       available: hasImages
@@ -693,7 +698,7 @@ const bundleOptions = computed(() => {
     {
       id: 'analysis',
       name: '简历润色解析',
-      iconSrc: '/images/daochu_baogao.png',
+      iconSrc: iconDaochuBaogao,
       desc: '润色策略 & 面试建议文本报告',
       unavailableDesc: '尚未生成润色解析，请先在"润色解析"页生成',
       available: hasAnalysis
@@ -701,7 +706,7 @@ const bundleOptions = computed(() => {
     {
       id: 'idphoto',
       name: '简历证件照',
-      iconSrc: '/images/daochu_zhengjianzhao.png',
+      iconSrc: iconDaochuZhengjianzhao,
       desc: '由工具箱证件照功能制作的成品照',
       unavailableDesc: '尚未制作证件照，请先使用工具箱→证件照功能',
       available: hasIdPhoto
@@ -1148,7 +1153,7 @@ async function runEmailSend() {
     }
   } catch (err) {
     console.error('[DoneStage] 邮件发送失败:', err)
-    ElMessage.error('发送失败：' + (err.message || '请重试'))
+    ElMessage.error(err.serverMessage || err.response?.data?.message || ('发送失败：' + (err.message || '请重试')))
   } finally {
     isSendingEmail.value = false
     emailStatusText.value = ''
